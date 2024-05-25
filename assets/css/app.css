@@ -1,0 +1,329 @@
+/* ================== Variables ================== */
+:root{
+    --primary-color: #bb763b;
+    --second-color: #196FE0;
+    --hover-bg-color:  #db8c47;
+    --border-hover-color: #a7652b;
+    --shadow-1: 0px 2px 10px rgba(0, 0, 0, 0.3);
+    --shadow-2: 0px 2px 10px rgba(26, 112, 224, 0.4);
+}
+
+/* ================== Global Styles ================== */
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+
+}
+
+body{
+    background-image: url("../images/wallpaper-login2.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+}
+
+ul{
+    list-style-type: none;
+}
+
+/* ================== Pages / Routes ================== */
+/* ------------------ Navigation bar ------------------*/
+.navbar {
+    background-color: black;
+    color: #fff;
+    padding: 10px 10px 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+.navbar-logo a {
+    flex: 1;
+    margin-left: 15px;
+    color: lightblue;
+    font-size: 24px;
+    text-decoration: none;
+    width: 30%;
+}
+.navbar-logo img{
+    width: 40%;
+    object-fit:fill;
+    transform: translateY(4px);
+
+}
+
+.navbar-menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    margin-right: 15px;
+    display: flex; 
+    align-items: center; 
+}
+
+.navbar-menu ul li {
+    display: inline;
+    margin-left: 10px; 
+}
+
+.navbar-menu ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.basics {
+    flex: 1;
+}
+
+.navbar-menu .navbar-link {
+    position: relative;
+    text-decoration: none;
+}
+.navbar-menu .navbar-link::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: whitesmoke;
+    transition: width 0.3s ease-in-out;
+}
+
+.navbar-menu .navbar-link:hover::after {
+    width: 100%;
+}
+
+/* Dropdown menu */
+.navbar-menu ul .dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.navbar-menu ul .dropdown .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: black;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.navbar-menu ul .dropdown .dropdown-menu li {
+    color: white;
+    padding: 16px 5px;
+    display: block;
+    font-size: 15px;
+}
+
+.navbar-menu ul .dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.navbar-menu .navbar-dropdown-link {
+    position: relative;
+    text-decoration: none;
+}
+.navbar-menu .navbar-dropdown-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2.5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: whitesmoke;
+    transition: width 0.3s ease-in-out;
+}
+
+.navbar-menu .navbar-dropdown-link:hover::after {
+    width: 100%;
+}
+/* End of dropdown menu */
+/* user nav bar */
+.nav-user ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    margin-right: 15px;
+    display: flex; 
+    align-items: center; 
+}
+.nav-user ul li {
+    display: inline;
+    margin-left: 10px; 
+}
+.nav-user ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+}
+.nav-user .login-button {
+    margin-left: 120px;
+    background-color: #b88d21;
+    border-radius: 5px;
+    padding: 7px 20px;
+    color: white;
+    text-decoration: none;
+}
+.nav-user .login-button:hover {
+    background-color: #c9a23f;
+}
+
+.nav-user .profile-button {
+    position: relative;
+    color: black;
+    text-decoration: none;
+}
+.nav-user .profile-button::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: whitesmoke;
+    transition: width 0.3s ease-in-out;
+}
+
+.nav-user .profile-button:hover::after {
+    width: 100%;
+}
+/* End User Nav Bar */
+/* ------------------ End of Navigation bar ------------------*/
+
+/* ------------------ Home Page ------------------*/
+.home-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    background-color: rgba(245, 245, 245, 0.624);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 40px;
+    display: flex;
+    flex-direction: column; /* Display children elements in a column */
+}
+.home-container .hero {
+    display: flex;
+    align-items: flex-start; /* Align items to the start (left side) */
+}
+.home-container .hero .text-content {
+    margin-right: 200px; /* Add some space between text and image */
+}
+.home-container .hero h2 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px;
+}
+.home-container .hero p {
+    font-size: 1.2em;
+    color: #666;
+    text-align: left;
+}
+.home-container #home-image {
+    height: 300px;
+    width: 500px;   
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+.home-container .car-card {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+.home-container .car-card .rent-btn {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 2px solid transparent;
+}
+.home-container .car-card .rent-btn:hover {
+    transition: 0.3s ease;
+    background-color: var(--hover-bg-color);
+    border: 2px solid var(--border-hover-color);
+}
+.home-container .copyright{
+    margin: 0;
+    color: rgb(95, 95, 95);
+    font-size: 15px;
+}
+/* ------------------ end of Home Page ------------------*/
+
+/* ------------------ About Page ------------------*/
+.about-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: rgba(245, 245, 245, 0.624);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 50px;
+}
+
+.about-container h2 {
+    margin-bottom: 20px;
+}
+
+/* Author styles */
+.author {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.author img {
+    width: 100px; 
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 20px;
+    object-fit: cover;
+}
+
+.author-info {
+    flex: 1;
+}
+
+.author-info h3 {
+    margin-top: 0;
+}
+
+/* About paragraph styles */
+.about-paragraph1 {
+    margin-top: 0;
+    text-align: justify;
+    line-height: 1.4;
+    margin-bottom: 30px;
+
+}
+
+.about-paragraph2 {
+    margin-top: 50px;
+    text-align: justify;
+    line-height: 1.6;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .author {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .author img {
+        margin-right: 10px;
+        margin-bottom: 0;
+        object-fit: cover;
+    }
+}
+/* ------------------ end of About Page ------------------*/
