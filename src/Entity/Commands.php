@@ -17,11 +17,11 @@ class Commands
 
     #[ORM\ManyToOne(targetEntity: Cars::class)]
     #[ORM\JoinColumn(name: "car_id", referencedColumnName: "id")]
-    private ?Integer $car_id;
+    private ?Cars $car_id;
 
     #[ORM\ManyToOne(targetEntity: Users::class)]
     #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
-    private ?Integer $user_id = null;
+    private ?Users $user_id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $rental_date = null;
@@ -43,24 +43,24 @@ class Commands
         return $this->id;
     }
 
-    public function getCarId(): ?int
+    public function getCarId(): ?Cars
     {
         return $this->car_id;
     }
 
-    public function setCarId(int $car_id): static
+    public function setCarId(Cars $car_id): static
     {
         $this->car_id = $car_id;
 
         return $this;
     }
 
-    public function getUserId(): ?int
+    public function getUserId(): ?Users
     {
         return $this->user_id;
     }
 
-    public function setUserId(int $user_id): static
+    public function setUserId(Users $user_id): static
     {
         $this->user_id = $user_id;
 

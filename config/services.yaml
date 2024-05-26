@@ -22,3 +22,15 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\DataFixtures\UserFixtures:
+        tags:
+            - { name: doctrine.fixture.orm, group: user }
+
+    App\DataFixtures\CarsFixtures:
+        tags:
+            - { name: doctrine.fixture.orm, group: cars }
+
+    App\DataFixtures\CommandsFixtures:
+        tags:
+            - { name: doctrine.fixture.orm, group: commands }

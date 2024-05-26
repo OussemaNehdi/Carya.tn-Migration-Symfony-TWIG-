@@ -38,7 +38,7 @@ class Cars
 
     #[ORM\ManyToOne(targetEntity: Users::class)]
     #[ORM\JoinColumn(name: "owner_id", referencedColumnName: "id")]
-    private ?Integer $owner_id = null;
+    private ?Users $owner_id = null;
 
     public function getId(): ?int
     {
@@ -129,12 +129,12 @@ class Cars
         return $this;
     }
 
-    public function getOwnerId(): ?int
+    public function getOwnerId(): ?Users
     {
         return $this->owner_id;
     }
 
-    public function setOwnerId(int $owner_id): static
+    public function setOwnerId(Users $owner_id): static
     {
         $this->owner_id = $owner_id;
 
