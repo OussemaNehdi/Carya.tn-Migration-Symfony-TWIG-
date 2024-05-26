@@ -1,1 +1,160 @@
+{# templates/admin/dashboard.html.twig #}
 {% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block body %}
+<h1>Admin Dashboard</h1>
+
+<!-- Debugging: Display users variable -->
+{% if users is not defined %}
+    <p>Error: users variable is not defined.</p>
+{% else %}
+    <p>Users variable is defined.</p>
+    <p>{{ users|length }} users found.</p>
+{% endif %}
+
+<!-- User list -->
+<section>
+    <h2>List of Users</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Email</th>
+                <th>Created</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.firstName }}</td>
+                    <td>{{ user.lastName }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.creationDate ? user.creationDate|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ user.roles[0] }}</td>
+                    <td>
+                        {% if user.roles[0] == 'banned' %}
+                            <a href="" class="unban-link">Unban</a>
+                        {% elseif user.roles[0] == 'admin' %}
+                            Admin
+                        {% else %}
+                            <a href="" class="ban-link">Ban</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<!-- Car list -->
+<section>
+    <h2>List of Cars</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Car ID</th>
+                <th>Car Brand</th>
+                <th>Car Model</th>
+                <th>Color</th>
+                <th>Kilometers</th>
+                <th>Owner</th>
+                <th>Price</th>
+                <th>Available</th>
+                <th>Actions</th>
+                <th><button id="addCarBtn">Add Car</button></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for car in cars %}
+                <tr>
+                    <td class="car-image" data-id="{{ car.id }}">{{ car.id }}</td>
+                    <td class="car-image" data-id="{{ car.id }}">{{ car.brand }}</td>
+                    <td class="car-image" data-id="{{ car.id }}">{{ car.model }}</td>
+                    <td>{{ car.color }}</td>
+                    <td>{{ car.km }}</td>
+                    <td>{{ car.OwnerId.id}}</td>
+                    <td>{{ car.price }}</td>
+                    <td></td>
+                    <td>
+                        <a href="delete_car', {id: car.id}" class="unban-link">Delete</a>
+                    </td>
+                    <td>
+                        <button id="UpdateCarBtn{{ car.id }}">Update Listing</button>
+                    </td>
+                </tr>
+                
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<!-- Car commands list -->
+<section>
+    <h2>List of Car Commands</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Command ID</th>
+                <th>Car ID</th>
+                <th>User ID</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Price Paid</th>
+                <th>Confirmation</th>
+                <th></th>
+                <th>Actions</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for command in commands %}
+                <tr>
+                    <td>{{ command.id }}</td>
+                    <td class="car-info" data-id="{{ command.carId.id }}">{{ command.carId.id }}</td>
+                    <td class="user-info" data-id="{{ command.userId.id }}">{{ command.userId.id }}</td>
+                    <td>{{ command.startDate ? command.startDate|date('Y-m-d') : '' }}</td>
+                    <td>{{ command.endDate ? command.endDate|date('Y-m-d') : '' }}</td>
+                    <td></td>
+                    <td>{{ command.confirmed ? (command.confirmed == 1 ? 'Accepted' : 'Refused') : 'Unreviewed' }}</td>
+                    {% if not command.confirmed %}
+                        <td>
+                            <form action="accept_command" method="POST">
+                                <input type="hidden" name="command_id" value="{{ command.id }}">
+                                <button type="submit" class="accept-command">Accept</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="refuse_command" method="POST">
+                                <input type="hidden" name="command_id" value="{{ command.id }}">
+                                <button type="submit" class="refuse-command">Refuse</button>
+                            </form>
+                        </td>
+                        <td>
+                            <a href="cancel_command', {id: command.id})">
+                                <button type="submit" class="refuse-command">Cancel</button>
+                            </a>
+                        </td>
+                    {% else %}
+                        <td></td>
+                        <td>
+                            <a href="cancel_command', {id: command.id}">
+                                <button type="submit" class="refuse-command">Cancel</button>
+                            </a>
+                        </td>
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+
+{% endblock %}

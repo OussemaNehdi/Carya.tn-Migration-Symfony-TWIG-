@@ -8,7 +8,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
-
+use App\Entity\Users;
+use App\Entity\Cars;
+use App\Entity\Commands;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Psr\Log\LoggerInterface;
@@ -92,10 +95,23 @@ class HomeController extends AbstractController
     }
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
-    public function adminDashboard(): Response
+    public function dashboard(EntityManagerInterface $entityManager): Response
     {
+        // Fetch data from the database using injected EntityManager
+        $users = $entityManager->getRepository(Users::class)->findAll();
+        $cars = $entityManager->getRepository(Cars::class)->findAll();
+        $commands = $entityManager->getRepository(Commands::class)->findAll();
+
+        // Debugging: Check if data is fetched
+        if (!$users || !$cars || !$commands) {
+            throw $this->createNotFoundException('No data found.');
+        }
+
         return $this->render('admin/dashboard.html.twig', [
-            'bodyclass' => 'adminDashboardBody',
+            'users' => $users,
+            'cars' => $cars,
+            'commands' => $commands,
+            'bodyclass' => 'dashboardBody',
         ]);
     }
 
