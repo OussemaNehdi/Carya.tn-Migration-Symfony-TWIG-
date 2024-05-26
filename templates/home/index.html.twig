@@ -15,11 +15,11 @@
                 we have the perfect vehicle to meet your needs and fit your budget.
             </p>
         </div>
-        <img src="/Mini-PHP-Project/carya.tn/Resources/car_images/m2.jpg" alt="car" id="home-image">
+        <img src="{{ asset("/images/car_images/m2.jpg")}} " alt="car" id="home-image">
     </div>
 
     <div class="car-card">
-        <a href="/Mini-PHP-Project/carya.tn/Templates/rent_car.php" class="rent-btn">Rent Now</a>
+        <a href="{{ path('rent_cars') }}" class="rent-btn">Rent Now</a>
     </div>
 
     <p class="copyright"> © 2024 Carya.tn. All rights reserved.</p>

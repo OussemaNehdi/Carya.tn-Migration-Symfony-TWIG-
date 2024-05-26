@@ -327,3 +327,79 @@ ul{
     }
 }
 /* ------------------ end of About Page ------------------*/
+
+/* ------------------ Contact Page ------------------*/
+.contact_container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: rgba(245, 245, 245, 0.624);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(2px);
+}
+
+.contact_container h2 {
+    margin-top: 0;
+    font-size: 45px;
+    color: black;
+}
+
+.contact_container form {
+    margin-top: 20px;
+}
+
+.contact_container label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.contact_container input[type="text"],
+.contact_container input[type="email"],
+.contact_container textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.contact_container input:focus, .contact_container textarea:focus{
+    box-shadow: none;
+    border-color: #c89568;
+}
+.contact_container input[type="email"]::placeholder {
+    color: rgba(170, 167, 167, 0.879);
+}
+
+
+.contact_container textarea {
+    height: 100px;
+}
+
+.contact_container button[type="submit"] {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 20px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.contact_container button[type="submit"]:hover {
+    transition: background-color 0.2s ease-in-out;
+    background-color: var(--hover-bg-color);
+    border: 2px solid var(--border-hover-color);
+}
+
+.success {
+    color: rgba(37, 120, 37, 0.885);
+    font-style: italic;
+}
+
+.error {
+    color: rgba(181, 40, 40, 0.833);
+    font-style: italic;
+}
+/* ------------------ end of Contact Page ------------------*/

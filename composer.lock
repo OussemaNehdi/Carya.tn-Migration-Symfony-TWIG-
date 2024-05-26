@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "87ac3e866562157d1a6825d9d668008d",
+    "content-hash": "18bf7aa8d1080973d151c7d5c2801bb5",
     "packages": [
         {
             "name": "composer/semver",
@@ -3683,6 +3683,71 @@
             "homepage": "https://symfony.com",
             "support": {
                 "source": "https://github.com/symfony/framework-bundle/tree/v6.4.7"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-04-18T09:22:46+00:00"
+        },
+        {
+            "name": "symfony/google-mailer",
+            "version": "v6.4.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/google-mailer.git",
+                "reference": "6976400f5e967214fe6e07b91e06e1ccdbd2229b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/google-mailer/zipball/6976400f5e967214fe6e07b91e06e1ccdbd2229b",
+                "reference": "6976400f5e967214fe6e07b91e06e1ccdbd2229b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "symfony/mailer": "^5.4.21|^6.2.7|^7.0"
+            },
+            "require-dev": {
+                "symfony/http-client": "^5.4|^6.0|^7.0"
+            },
+            "type": "symfony-mailer-bridge",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Mailer\\Bridge\\Google\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Google Mailer Bridge",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/google-mailer/tree/v6.4.7"
             },
             "funding": [
                 {

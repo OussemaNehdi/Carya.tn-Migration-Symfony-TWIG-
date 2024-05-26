@@ -2,9 +2,15 @@
 
 namespace App\Controller;
 
+use App\Form\ContactType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
+
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 class HomeController extends AbstractController
 {
@@ -25,12 +31,41 @@ class HomeController extends AbstractController
     }
 
     #[Route('/contact', name: 'contact')]
-    public function contact(): Response
+    public function contact(Request $request, MailerInterface $mailer): Response
     {
+        $form = $this->createForm(ContactType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            // Get the form data
+            $formData = $form->getData();
+
+            // Prepare the email message
+            $email = (new Email())
+                ->from('caryatnwebsite@gmail.com')
+                ->to('caryatnwebsite@gmail.com')
+                ->subject('Contact Form Submission')
+                ->text('Name: ' . $formData['name'] . "\n\n" . 'Email: ' . $formData['email'] . "\n\n" . 'Message: ' . $formData['message']);
+
+            // Send the email
+            $success = $mailer->send($email);
+
+            if ($success) {
+                $this->addFlash('success', 'Your message has been sent successfully. We will get back to you soon!');
+            } else {
+                $this->addFlash('error', 'Oops! There was an error sending your message. Please try again later.');
+            }
+
+            return $this->redirectToRoute('contact');
+        }
+
         return $this->render('home/contact.html.twig', [
             'bodyclass' => 'contactBody',
+            'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/rentCars', name: 'rent_cars')]
     public function rentCars(): Response
