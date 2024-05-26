@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Psr\Log\LoggerInterface;
 
 class HomeController extends AbstractController
 {
@@ -31,7 +32,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/contact', name: 'contact')]
-    public function contact(Request $request, MailerInterface $mailer): Response
+    public function contact(Request $request, MailerInterface $mailer, LoggerInterface $logger): Response
     {
         $form = $this->createForm(ContactType::class);
         $form->handleRequest($request);
@@ -43,23 +44,25 @@ class HomeController extends AbstractController
 
             // Prepare the email message
             $email = (new Email())
-                ->from('caryatnwebsite@gmail.com')
+                ->from('support@demomailtrap.com') // you need to put from something@demomailtrap.com cause thats the domain we have in mailtrap
                 ->to('caryatnwebsite@gmail.com')
-                ->subject('Contact Form Submission')
+                ->subject('Contact Form Submissions')
                 ->text('Name: ' . $formData['name'] . "\n\n" . 'Email: ' . $formData['email'] . "\n\n" . 'Message: ' . $formData['message']);
 
             // Send the email
-            $success = $mailer->send($email);
-
-            if ($success) {
+            try {
+                // Send the email
+                $mailer->send($email);
                 $this->addFlash('success', 'Your message has been sent successfully. We will get back to you soon!');
-            } else {
+                $logger->info('Email sent successfully');
+            } catch (\Exception $e) {
                 $this->addFlash('error', 'Oops! There was an error sending your message. Please try again later.');
+                $logger->error('Error sending email: ' . $e->getMessage());
             }
 
             return $this->redirectToRoute('contact');
         }
-
+        
         return $this->render('home/contact.html.twig', [
             'bodyclass' => 'contactBody',
             'form' => $form->createView(),
@@ -78,6 +81,11 @@ class HomeController extends AbstractController
     #[Route('/myCars', name: 'my_cars')]
     public function myCars(): Response
     {
+        // Check if the user is authenticated
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('login');
+        }
+
         return $this->render('home/myCars.html.twig', [
             'bodyclass' => 'myCarsBody',
         ]);
