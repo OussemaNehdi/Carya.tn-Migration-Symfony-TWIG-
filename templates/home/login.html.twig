@@ -1,1 +1,95 @@
 {% extends 'base.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+{# Removing PHP code and handling the logic in the controller or a service #}
+
+<div class="login-container">
+    <div class="box">
+        <!---------------------------- Login Box ---------------------------->
+        <form action="{{ path('login_route') }}" method="POST">
+            <div class="box-login" id="login">
+                <div class="top-header">
+                    <h3>Hello, Again!</h3>
+                    <small>We are happy to have you back.</small>
+                </div>  
+                <div class="input-group">
+                    <div class="input-field">
+                        <input type="text" class="input-box" id="logEmail" name="email" required>
+                        <label for="logEmail">Email address</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" class="input-box" id="logPassword" name="password" required>
+                        <label for="logPassword">Password</label>
+                        <div class="eye-area">
+                            <div class="eye-box" onclick="myLogPassword()">
+                                <i class="fa-regular fa-eye" id="eye"></i>
+                                <i class="fa-regular fa-eye-slash" id="eye-slash"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="remember">
+                    <input type="checkbox" id="formCheck" class="check">
+                    <label for="formCheck">Remember Me</label>
+                </div>
+                <div class="input-field">
+                    <input type="submit" class="input-submit" value="Sign In" required>
+                </div>
+                <div class="forgot">
+                    <a href="{{ path('forgot_password_route') }}">Forgot password?</a>
+                </div>
+            </div>
+        </form>
+        <!---------------------------- Signup Box ---------------------------->
+        <form action="{{ path('signup_route') }}" method="POST">
+            <div class="box-register" id="register">
+                <div class="top-header">
+                    <h3>Sign Up, Now!</h3>
+                    <small>We are happy to have you with us.</small>
+                </div>
+                <div class="input-group">
+                    <div class="input-field">
+                        <input type="text" class="input-box" id="regUsername" name="fname" required>
+                        <label for="regUsername">First Name</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="text" class="input-box" id="regUsername" name="lname" required>
+                        <label for="regUsername">Last Name</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="text" class="input-box" id="regEmail" name="email" required>
+                        <label for="regEmail">Email address</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" class="input-box" id="regPassword" name="password" required>
+                        <label for="regPassword">Password</label>
+                        <div class="eye-area">
+                            <div class="eye-box" onclick="myRegPassword()">
+                                <i class="fa-regular fa-eye" id="eye-2"></i>
+                                <i class="fa-regular fa-eye-slash" id="eye-slash-2"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="radio-buttons">
+                    <input type="radio" id="formCheck1" name="role" value="customer" checked>
+                    <label for="formCheck1">Customer</label>
+                    <input type="radio" id="formCheck2" name="role" value="seller">
+                    <label for="formCheck2">Seller</label>
+                </div>
+                <div class="input-field">
+                    <input type="submit" class="input-submit" value="Sign Up" required>
+                </div>
+            </div>
+            <div class="switch">
+                <a href="#" class="login active" onclick="login()">Login</a>
+                <a href="#" class="register" onclick="register()">Register</a>
+                <div class="btn-active" id="btn"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
