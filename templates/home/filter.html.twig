@@ -1,0 +1,69 @@
+{# templates/home/filter_menu.html.twig #}
+
+{% macro isChecked(value, filterData, filterName) %}
+    {% if filterData[filterName] is defined and value in filterData[filterName] %}
+        checked
+    {% endif %}
+{% endmacro %}
+
+{% import _self as filters %}
+
+<div class="container">
+    <div class="titles">
+        <h2>Filter Menu</h2>
+    </div>
+    <form action={{ path('rent_cars') }} method="POST">
+        <div class="sub-container">
+            <h3>Brand</h3>
+            {% for brand in brands %}
+                <label>
+                    <input type="checkbox" name="brand[]" value="{{ brand }}" {{ filters.isChecked(brand, filter_data, 'brand') }}>
+                    {{ brand }}
+                </label><br>
+            {% endfor %}
+        </div>
+        <div class="sub-container">
+            <h3>Model</h3>
+            {% for model in models %}
+                <label>
+                    <input type="checkbox" name="model[]" value="{{ model }}" {{ filters.isChecked(model, filter_data, 'model') }}>
+                    {{ model }}
+                </label><br>
+            {% endfor %}
+        </div>
+        <div class="sub-container">
+            <h3>Color</h3>
+            {% for color in colors %}
+                <label>
+                    <input type="checkbox" name="color[]" value="{{ color }}" {{ filters.isChecked(color, filter_data, 'color') }}>
+                    {{ color }}
+                </label><br>
+            {% endfor %}
+        </div>
+        <div class="sub-container">
+            <h3>Km Range</h3>
+            <!-- Range input for minimum km -->
+            <input class="price-range-slider" type="range" id="km_min" name="km_min" min="0" max="{{ max_km }}" value="{{ filter_data.km_min[0] ?? 0 }}" oninput="updateRangeValue('km_min', 'km_min_val', this.value)">
+            <span id="km_min_val">{{ filter_data.km_min[0] ?? 0 }}</span> km<br>
+            <!-- Range input for maximum km -->
+            <input class="price-range-slider" type="range" id="km_max" name="km_max" min="0" max="{{ max_km }}" value="{{ filter_data.km_max[0] ?? max_km }}" oninput="updateRangeValue('km_max', 'km_max_val', this.value)">
+            <span id="km_max_val">{{ filter_data.km_max[0] ?? max_km }}</span> km<br>
+        </div>
+        <div class="sub-container">
+            <h3>Price Range</h3>
+            <!-- Range input for minimum price -->
+            <input class="price-range-slider" type="range" id="price_min" name="price_min" min="0" max="{{ max_price }}" value="{{ filter_data.price_min[0] ?? 0 }}" oninput="updateRangeValue('price_min', 'price_min_val', this.value)">
+            <span id="price_min_val">{{ filter_data.price_min[0] ?? 0 }}</span> $<br>
+            <!-- Range input for maximum price -->
+            <input class="price-range-slider" type="range" id="price_max" name="price_max" min="0" max="{{ max_price }}" value="{{ filter_data.price_max[0] ?? max_price }}" oninput="updateRangeValue('price_max', 'price_max_val', this.value)">
+            <span id="price_max_val">{{ filter_data.price_max[0] ?? max_price }}</span> $<br>
+            <input class="apply-button" type="submit" value="Apply Filters">
+        </div>
+    </form>
+</div>
+
+<script>
+    function updateRangeValue(rangeId, spanId, newValue) {
+        document.getElementById(spanId).innerText = newValue;
+    }
+</script>
