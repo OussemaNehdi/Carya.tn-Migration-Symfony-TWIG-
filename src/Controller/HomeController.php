@@ -123,39 +123,33 @@ class HomeController extends AbstractController
     }
 
     #[Route('/myCars', name: 'my_cars')]
-    public function myCars(): Response
+    public function myCars(CarsRepository $CarsRepository,Request $request , EntityManagerInterface $entityManager): Response
     {
-<<<<<<< HEAD
-        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier());
-        
-
-        
-        $filters = $CarsRepository->constructFilterQuery($request); 
+        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier()); //current user?
+        if (!$user) {
+            
+            throw $this->createNotFoundException('User not found');
+        }
+       
+        $filters = $CarsRepository->constructFilterQuery($request);       
         if (!empty($filters)) {
             $Cars = $CarsRepository->findByFilters($filters);
         } else {
             $Cars=$CarsRepository->getAllCars();
         }
-        $Cars = $CarsRepository->findByUserId($user->getId());
+
+        $userCars = $CarsRepository->findCarsByUserId($Cars, $user->getId());
+
         return $this->render('home/myCars.html.twig', [
-            'bodyclass' => 'rentCarsBody',
-            'cars' => $Cars,
+            'bodyclass' => 'rent-body',
+            'cars' => $userCars,
             'brands'=>$CarsRepository-> getDistinctValues('brand'),
             'models'=>$CarsRepository->getDistinctValues( 'model'),
             'colors'=>$CarsRepository->getDistinctValues( 'color'),
             'max_km'=>$CarsRepository->getMaxValue('km'),
             'max_price'=>$CarsRepository->getMaxValue('price'),
             'filter_data' => $filters,
-=======
-        // Check if the user is authenticated
-        if (!$this->getUser()) {
-            return $this->redirectToRoute('login');
-        }
-
-        return $this->render('home/myCars.html.twig', [
-            'bodyclass' => 'myCarsBody',
->>>>>>> da7ebd733b4871810439dda682700686ff9c9eff
-        ]);
+                ]);
     }
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
