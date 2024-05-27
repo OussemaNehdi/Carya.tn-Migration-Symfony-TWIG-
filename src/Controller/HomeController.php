@@ -195,7 +195,7 @@ class HomeController extends AbstractController
                     $rememberMeService = $this->container->get('security.authentication.rememberme.services.persistent.remember_me');
                     $rememberMeService->loginSuccess($request, $response, $token);
                 }
-
+                $this->addFlash('success', 'Welcome to Carya, Dear '. $user->getFirstName());
                 return $this->redirectToRoute('my_cars');
             } else {
                 // Handle invalid credentials
