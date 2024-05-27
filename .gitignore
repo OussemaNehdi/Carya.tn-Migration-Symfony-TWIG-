@@ -21,5 +21,6 @@
 
 ###> symfony/asset-mapper ###
 /public/assets/
+/assets/images/car_images/
 /assets/vendor/
 ###< symfony/asset-mapper ###

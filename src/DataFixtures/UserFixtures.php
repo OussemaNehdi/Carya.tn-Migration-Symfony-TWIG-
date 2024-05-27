@@ -22,10 +22,10 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         $usersData = [
             ['John', 'Doe', 'john@example.com', 'password123', '2024-03-25', ['ROLE_USER'], 'California', 'United States', 'mezyen.jpg'],
             ['Alice', 'Smith', 'alice@example.com', 'securepass', '2024-03-25', ['ROLE_ADMIN'], 'New York', 'United States', 'mezyena.jpg'],
-            ['Bob', 'Johnson', 'bob@example.com', 'bobspass', '2024-03-25', ['ROLE_USER'], 'Texas', 'United States', 'default.jpg'],
-            ['Emily', 'Brown', 'emily@example.com', 'emilypass', '2024-03-26', ['ROLE_USER'], 'Florida', 'United States', 'default.jpg'],
-            ['David', 'Wilson', 'david@example.com', 'davidpass', '2024-03-27', ['ROLE_BANNED'], 'Washington', 'United States', 'default.jpg'],
-            ['Sophia', 'Taylor', 'sophia@example.com', 'sophiapass', '2024-03-27', ['ROLE_USER'], 'California', 'United States', 'default.jpg'],
+            ['Bob', 'Johnson', 'bob@example.com', 'bobspass', '2024-03-25', ['ROLE_USER'], 'Texas', 'United States', 'default.png'],
+            ['Emily', 'Brown', 'emily@example.com', 'emilypass', '2024-03-26', ['ROLE_USER'], 'Florida', 'United States', 'default.png'],
+            ['David', 'Wilson', 'david@example.com', 'davidpass', '2024-03-27', ['ROLE_BANNED'], 'Washington', 'United States', 'default.png'],
+            ['Sophia', 'Taylor', 'sophia@example.com', 'sophiapass', '2024-03-27', ['ROLE_USER'], 'California', 'United States', 'default.png'],
         ];
 
         foreach ($usersData as $key => $data) {
