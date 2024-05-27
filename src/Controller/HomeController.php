@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Psr\Log\LoggerInterface;
+use App\Repository\CarsRepository;
 
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -96,12 +97,30 @@ class HomeController extends AbstractController
         ]);
     }
 
+  
+
 
     #[Route('/rentCars', name: 'rent_cars')]
-    public function rentCars(): Response
+    public function rentCars(CarsRepository $CarsRepository,Request $request): Response
     {
+
+       
+        $filters = $CarsRepository->constructFilterQuery($request);       
+        if (!empty($filters)) {
+            $Cars = $CarsRepository->findByFilters($filters);
+        } else {
+            $Cars=$CarsRepository->getAllCars();
+        }
         return $this->render('home/rentCars.html.twig', [
             'bodyclass' => 'rentCarsBody',
+            'cars' => $Cars,
+            'brands'=>$CarsRepository-> getDistinctValues('brand'),
+            'models'=>$CarsRepository->getDistinctValues( 'model'),
+            'colors'=>$CarsRepository->getDistinctValues( 'color'),
+            'max_km'=>$CarsRepository->getMaxValue('km'),
+            'max_price'=>$CarsRepository->getMaxValue('price'),
+            'filter_data' => $filters,
+
         ]);
     }
 
