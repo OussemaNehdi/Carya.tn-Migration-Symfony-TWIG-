@@ -296,32 +296,49 @@ class HomeController extends AbstractController
 //  this is the code for the profile image upload
 
     #[Route("/profile/upload", name: "profile_image_upload")]
+    #[Route("/profile/upload", name: "profile_image_upload")]
     public function uploadProfileImage(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier());
         $profileImage = $request->files->get('profile_image');
         
         if ($profileImage) {
+            // Validate the file type
+            $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!in_array($profileImage->getMimeType(), $allowedMimeTypes)) {
+                $this->addFlash('error', 'Invalid file type. Only JPEG, PNG, and GIF are allowed.');
+                return $this->redirectToRoute('profile');
+            }
+    
+            // Validate the file size (e.g., max 5MB)
+            $maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+            if ($profileImage->getSize() > $maxFileSize) {
+                $this->addFlash('error', 'File size exceeds the limit of 5MB.');
+                return $this->redirectToRoute('profile');
+            }
+    
+            // Generate a safe and unique filename
             $newFilename = uniqid() . '.' . $profileImage->guessExtension();
-            
+    
             try {
                 $profileImage->move(
                     $this->getParameter('profile_image_directory'),
                     $newFilename
                 );
             } catch (FileException $e) {
-                // ... handle exception if something happens during file upload
+                // Handle exception if something happens during file upload
                 $this->addFlash('error', 'An error occurred while uploading the profile image.');
                 return $this->redirectToRoute('profile');
             }
-            
+    
+            // Update the user's profile image
             $user->setProfileImage($newFilename);
             $entityManager->persist($user);
             $entityManager->flush();
-            
+    
             $this->addFlash('success', 'Profile image updated successfully.');
         }
-        
+    
         return $this->redirectToRoute('profile');
     }
 
