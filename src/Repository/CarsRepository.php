@@ -6,6 +6,7 @@ use App\Entity\Cars;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Users;
 
 /**
  * @extends ServiceEntityRepository<Cars>
@@ -147,6 +148,19 @@ public function findByFilters(array $filters): array
             ->select("MAX(cars.$field) AS max_value")
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function findActiveRentingCarsByUser(Users $user): array
+    {
+        $qb = $this->createQueryBuilder('cars');
+
+        $qb->join('cars.rentals', 'rentals')
+           ->andWhere('rentals.user = :user')
+           ->andWhere('rentals.endDate >= :currentDate')
+           ->setParameter('user', $user)
+           ->setParameter('currentDate', new \DateTime());
+
+        return $qb->getQuery()->getResult();
     }
 
 
