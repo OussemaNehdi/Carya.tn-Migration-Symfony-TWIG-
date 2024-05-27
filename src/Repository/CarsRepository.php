@@ -58,6 +58,7 @@ public function getAllCars(): array
 }
 
 
+
 public function findByFilters(array $filters): array
 {
     $qb = $this->createQueryBuilder('cars');
@@ -169,6 +170,14 @@ public function findByFilters(array $filters): array
             ->getQuery();
 
         return $qb->getResult();
+    }
+    ///////////////////////////////////////////////////////////// for myCars
+    public function findCarsByUserId(array $cars, int $userId)
+    {
+        // Filter the given array of cars by user ID
+        return array_filter($cars, function ($car) use ($userId) {
+            return $car->getOwnerId() === $userId;
+        });
     }
 
 }

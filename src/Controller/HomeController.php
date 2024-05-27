@@ -121,16 +121,33 @@ class HomeController extends AbstractController
     }
 
     #[Route('/myCars', name: 'my_cars')]
-    public function myCars(): Response
+    public function myCars(CarsRepository $CarsRepository,Request $request , EntityManagerInterface $entityManager): Response
     {
-        // Check if the user is authenticated
-        if (!$this->getUser()) {
-            return $this->redirectToRoute('login');
+        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier()); //current user?
+        if (!$user) {
+            
+            throw $this->createNotFoundException('User not found');
+        }
+       
+        $filters = $CarsRepository->constructFilterQuery($request);       
+        if (!empty($filters)) {
+            $Cars = $CarsRepository->findByFilters($filters);
+        } else {
+            $Cars=$CarsRepository->getAllCars();
         }
 
+        $userCars = $CarsRepository->findCarsByUserId($Cars, $user->getId());
+
         return $this->render('home/myCars.html.twig', [
-            'bodyclass' => 'myCarsBody',
-        ]);
+            'bodyclass' => 'rent-body',
+            'cars' => $userCars,
+            'brands'=>$CarsRepository-> getDistinctValues('brand'),
+            'models'=>$CarsRepository->getDistinctValues( 'model'),
+            'colors'=>$CarsRepository->getDistinctValues( 'color'),
+            'max_km'=>$CarsRepository->getMaxValue('km'),
+            'max_price'=>$CarsRepository->getMaxValue('price'),
+            'filter_data' => $filters,
+                ]);
     }
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
