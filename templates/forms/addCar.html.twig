@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="main-container">
+    <div class="add-titles">
+        <h2>Add Car</h2>
+    </div>
+    {{ form_start(form) }}
+    <div class="form-container">
+        <div class="sub-container">
+            {{ form_label(form.brand) }}
+            {{ form_widget(form.brand) }}
+        </div>
+        <div class="sub-container">
+            {{ form_label(form.model) }}
+            {{ form_widget(form.model) }}
+        </div>
+        <div class="sub-container">
+            {{ form_label(form.color) }}
+            {{ form_widget(form.color) }}
+        </div>
+        <div class="sub-container">
+            {{ form_label(form.price) }}
+            {{ form_widget(form.price) }}
+        </div>
+        <div class="sub-container">
+            {{ form_label(form.km) }}
+            {{ form_widget(form.km) }}
+        </div>
+        <div class="sub-container1">
+            {{ form_label(form.image) }}
+            {{ form_widget(form.image) }}
+        </div>
+        <div class="submit-add-popup">
+            {{ form_widget(form.available) }}
+            <button type="submit" class="submit-popup-button">Add Car</button>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

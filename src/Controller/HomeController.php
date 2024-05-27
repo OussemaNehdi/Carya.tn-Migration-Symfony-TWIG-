@@ -25,13 +25,11 @@ use App\Repository\CarsRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use App\Form\ProfileType;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use TCPDF;
-
-
-
+use Symfony\Component\HttpFoundation\RedirectResponse; 
+use App\Form\CarType;
 
 class HomeController extends AbstractController
 {
@@ -142,6 +140,8 @@ class HomeController extends AbstractController
         $users = $entityManager->getRepository(Users::class)->findAll();
         $cars = $entityManager->getRepository(Cars::class)->findAll();
         $commands = $entityManager->getRepository(Commands::class)->findAll();
+        $car = new Cars();
+        $form = $this->createForm(CarType::class, $car);
 
         // Debugging: Check if data is fetched
         if (!$users || !$cars || !$commands) {
@@ -153,6 +153,7 @@ class HomeController extends AbstractController
             'cars' => $cars,
             'commands' => $commands,
             'bodyclass' => 'dashboardBody',
+            'form' => $form->createView()
         ]);
     }
 
@@ -380,5 +381,124 @@ class HomeController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment;filename="' . $filename . '"');
 
         return $response;
+    }
+
+    #[Route('/user/{id}/ban', name: 'user_ban')]
+    public function banUser(Users $user, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $user->banUser();
+        $entityManager->flush();
+
+        $this->addFlash('success', 'User banned successfully.');
+
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
+    #[Route('/user/{id}/unban', name: 'user_unban')]
+    public function unbanUser(Users $user, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $user->unbanUser();
+        $entityManager->flush();
+
+        $this->addFlash('success', 'User unbanned successfully.');
+
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
+    #[Route('/command/accept', name: 'accept_command', methods: ['POST'])]
+    public function acceptCommand(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $commandId = $request->request->get('command_id');
+        $command = $entityManager->getRepository(Commands::class)->find($commandId);
+
+        if ($command) {
+            $command->setConfirmed(1);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Command accepted successfully.');
+        }
+
+        return $this->redirectToRoute('admin_dashboard'); // Assuming you have a route named 'command_list'
+    }
+
+    #[Route('/command/refuse', name: 'refuse_command', methods: ['POST'])]
+    public function refuseCommand(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $commandId = $request->request->get('command_id');
+        $command = $entityManager->getRepository(Commands::class)->find($commandId);
+
+        if ($command) {
+            $command->setConfirmed(0);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Command refused successfully.');
+        }
+
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
+    #[Route('/command/cancel', name: 'cancel_command', methods: ['POST'])]
+    public function cancelCommand(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $commandId = $request->request->get('command_id');
+        $command = $entityManager->getRepository(Commands::class)->find($commandId);
+
+        if ($command) {
+            $entityManager->remove($command);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Command canceled successfully.');
+        }
+
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
+    #[Route('/delete_car/{id}', name: 'delete_car')]
+    public function deleteCar($id, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        // Find the car by ID
+        $car = $entityManager->getRepository(Cars::class)->find($id);
+
+        // If car is not found, throw an exception or redirect with an error message
+        if (!$car) {
+            throw $this->createNotFoundException('The car does not exist');
+        }
+
+        // Remove the car
+        $entityManager->remove($car);
+        $entityManager->flush();
+
+        // Redirect to the car list page with a success message
+        $this->addFlash('success', 'Car deleted successfully.');
+
+        return $this->redirectToRoute('admin_dashboard'); // Adjust the route name to your car list page
+    }
+
+    #[Route('/add_car', name: 'add_car')]
+    public function addCar(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $car = new Cars();
+        $form = $this->createForm(CarType::class, $car);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->security->getUser();
+            $car->setOwnerId($user);
+
+            $entityManager->persist($car);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Car added successfully.');
+
+            return $this->redirectToRoute('car_list'); // Adjust the route name to your car list page
+        }
+
+        return $this->render('forms/add_car.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
