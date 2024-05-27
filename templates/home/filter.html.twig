@@ -12,7 +12,12 @@
     <div class="titles">
         <h2>Filter Menu</h2>
     </div>
-    <form action={{ path('rent_cars') }} method="POST">
+    
+        {% if app.request.attributes.get('_route') == 'my_cars' %}
+            <form action="{{ path('my_cars') }}" method="POST">
+        {% else %}
+            <form action="{{ path('rent_cars') }}" method="POST">
+        {% endif %}
         <div class="sub-container">
             <h3>Brand</h3>
             {% for brand in brands %}
