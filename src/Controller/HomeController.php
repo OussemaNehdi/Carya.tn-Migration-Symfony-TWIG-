@@ -288,7 +288,7 @@ class HomeController extends AbstractController
             'profileForm' => $form->createView(),
             'user' => $user,
             'activeRentingCars' => $activeRentingCars,
-            'bodyclass' => 'profileBody',
+            'bodyclass' => 'profile-body',
 
         ]);
     }   
@@ -298,7 +298,7 @@ class HomeController extends AbstractController
     #[Route("/profile/upload", name: "profile_image_upload")]
     public function uploadProfileImage(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
+        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier());
         $profileImage = $request->files->get('profile_image');
         
         if ($profileImage) {
@@ -325,11 +325,15 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('profile');
     }
 
-    #[Route('/export_rent_history', name: 'export_rent_history')]
+    #[Route('/profile/export_rent_history', name: 'export_rent_history')]
     public function exportRentHistory(EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
-        $commands = $entityManager->getRepository(Commands::class)->findBy(['user' => $user]);
+        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier());
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to access this page.');
+        }
+
+        $commands = $entityManager->getRepository(Commands::class)->findBy(['user_id' => ($user->getId())]);
 
         $filename = 'rent_history_' . date('Y-m-d') . '.pdf';
         $pdf = new TCPDF();
@@ -346,21 +350,27 @@ class HomeController extends AbstractController
 
         $pdf->SetFont('helvetica', '', 12);
 
-        $pdf->Cell(40, 10, 'Car', 1);
+        $pdf->Cell(40, 10, 'Car Brand', 1);
+        $pdf->Cell(40, 10, 'Car Model', 1);
         $pdf->Cell(40, 10, 'Start Date', 1);
         $pdf->Cell(40, 10, 'End Date', 1);
         $pdf->Cell(40, 10, 'Total Price', 1);
 
         foreach ($commands as $command) {
             $pdf->Ln();
+            $pdf->Cell(40, 10, $command->getCarId()->getBrand(), 1);
             $pdf->Cell(40, 10, $command->getCarId()->getModel(), 1);
             $pdf->Cell(40, 10, $command->getStartDate()->format('Y-m-d'), 1);
             $pdf->Cell(40, 10, $command->getEndDate()->format('Y-m-d'), 1);
             $pdf->Cell(40, 10, $command->getCarId()->getPrice(), 1);
         }
 
-        $pdf->Output($filename, 'D');
+        $pdfContent = $pdf->Output($filename, 'S');
 
-        return new Response();
+        $response = new Response($pdfContent);
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'attachment;filename="' . $filename . '"');
+
+        return $response;
     }
 }

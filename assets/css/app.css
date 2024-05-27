@@ -598,3 +598,115 @@ ul{
     }
 }
 /* ------------------ end of Login and Singup Page ------------------*/
+
+/* ------------------ Profile Page ------------------*/
+.profile-body .container{
+    background-color: rgba(245, 245, 245, 0.843);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.profile-body .form-control:focus {
+    box-shadow: none;
+    border-color: #c89568
+}
+
+.profile-body .profile-save-button {
+    background: rgb(153, 120, 53);
+    box-shadow: none;
+    border: none
+}
+
+.profile-body .profile-save-button:hover {
+    background: #ba9844ed
+}
+
+
+.profile-body .back:hover {
+    color: #ba9844ed;
+    cursor: pointer
+}
+
+.profile-body .labels {
+    font-size: 11px
+}
+.profile-body .export{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.profile-body .export-button{
+    display: flex;
+    border: 1px solid #000;
+    border-radius: 10px;
+    padding: 8px 16px;
+    align-items: center;
+    
+}
+
+.profile-body .export-button .fas{
+    color: #000;
+    text-decoration: none;
+}
+
+.profile-body .export-button .link{
+    margin-left: 25px;
+}
+.profile-body .export-button .link:hover{
+    color: black;
+}
+.profile-body .export-button:hover{
+    transition: background 0.2s ease-in-out;
+    background: #c89568;
+    cursor: pointer;
+    border: solid 1px #a35613
+}
+.profile-body .export-button:hover .fas, .profile-body .export-button:hover .link{
+    filter: invert(100%);
+    transition: 0.1s ease-in-out;
+}
+/* Profile picture */
+.profile-pic-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+.profile-pic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+}
+.edit-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+/* Hover effect */
+.profile-pic-container:hover .profile-pic {
+    transition: 0.3s ease;
+    border: 3px solid black;
+    opacity: 0.8;
+    cursor: pointer;
+}
+.profile-pic-container:hover .edit-icon {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.profile-body .comments {
+    margin-top: 10px;
+}
+.profile-body .comments p:first-child{
+    margin-bottom: 0;
+}
+.profile-body .comments .comment1{
+    font-size: 12px;
+    color: rgb(117, 116, 116);
+}
+/* ------------------ end of Profile Page ------------------*/

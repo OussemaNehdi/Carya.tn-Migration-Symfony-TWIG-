@@ -11,7 +11,7 @@
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                 <div class="profile-pic-container">
                     {% if user.profileImage %}
-                        <img id="profile-img" class="profile-pic" src="{{ asset('Resources/profile_images/' ~ user.profileImage) }}" onclick="document.getElementById('upload-profile-img').click();">
+                        <img id="profile-img" class="profile-pic" src="{{ asset('images/user_images/' ~ user.profileImage) }}" onclick="document.getElementById('upload-profile-img').click();">
                     {% else %}
                         <img id="profile-img" class="profile-pic" src="https://www.w3schools.com/howto/img_avatar2.png" onclick="document.getElementById('upload-profile-img').click();">
                     {% endif %}
@@ -103,11 +103,6 @@
     </div>
 </div>
 
-<div class="export-popup" id="popup">
-    {% include 'Export_rent_history.html.twig' %}
-</div>
-<div class="overlay" id="overlay"></div>
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("export").addEventListener("click", function() {
@@ -138,7 +133,7 @@
         document.getElementById('upload-buttons').style.display = "none";
         document.getElementById('upload-form').reset();
         {% if user.profileImage %}
-            document.getElementById('profile-img').src = "{{ asset('Resources/profile_images/' ~ user.profileImage) }}";
+            document.getElementById('profile-img').src = "{{ asset('images/user_images/' ~ user.profileImage) }}";
         {% else %}
             document.getElementById('profile-img').src = "https://www.w3schools.com/howto/img_avatar2.png";
         {% endif %}
