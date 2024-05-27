@@ -1,1 +1,33 @@
 {% extends 'base.html.twig' %}
+{#  This file will include the fitering menu on the left and the fetching (from Controller folder) on the right
+    The filter menu will be compatible with this page as well as the user listing page (More on filter_menu.php) --> 
+    
+    #}
+
+{% set title = "Rental Car Website" %}
+{% set class = "rent-body" %}
+
+{% block content %}
+<div class="main-container">
+    <div class="filter-menu" id="filterMenuContainer">
+        {% include 'filter_menu.html.twig' %}
+    </div>
+    <div class="cars-list content-container">
+        <!-- This is where the fetched cars will be displayed -->
+        {% include 'fetch_cars.html.twig' %}
+    </div>
+</div>
+<script>
+    window.addEventListener('scroll', function() {
+    var filterMenuContainer = document.getElementById('filterMenuContainer');
+    var contentContainer = document.querySelector('.content-container');
+    var scrollY = window.scrollY || window.pageYOffset;
+
+    if (scrollY > contentContainer.offsetTop) {
+        filterMenuContainer.style.top = (scrollY - contentContainer.offsetTop) + 'px';
+    } else {
+        filterMenuContainer.style.top = '0';
+    }
+    });
+</script>
+{% endblock %}
