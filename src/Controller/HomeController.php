@@ -98,8 +98,6 @@ class HomeController extends AbstractController
     }
 
   
-
-
     #[Route('/rentCars', name: 'rent_cars')]
     public function rentCars(CarsRepository $CarsRepository,Request $request): Response
     {
@@ -112,7 +110,7 @@ class HomeController extends AbstractController
             $Cars=$CarsRepository->getAllCars();
         }
         return $this->render('home/rentCars.html.twig', [
-            'bodyclass' => 'rentCarsBody',
+            'bodyclass' => 'rent-body',
             'cars' => $Cars,
             'brands'=>$CarsRepository-> getDistinctValues('brand'),
             'models'=>$CarsRepository->getDistinctValues( 'model'),
@@ -206,8 +204,6 @@ class HomeController extends AbstractController
             }
         
         }
-        
-
 
         $signupForm = $this->createForm(SignupType::class);
         $signupForm->handleRequest($request);
@@ -281,9 +277,6 @@ class HomeController extends AbstractController
         // Fetch active renting cars logic goes here
         $activeRentingCars = $entityManager->getRepository(Cars::class)->findActiveRentingCarsByUser($user);
 
-
-
-
         return $this->render('home/profile.html.twig', [
             'profileForm' => $form->createView(),
             'user' => $user,
@@ -293,9 +286,7 @@ class HomeController extends AbstractController
         ]);
     }   
 
-//  this is the code for the profile image upload
-
-    #[Route("/profile/upload", name: "profile_image_upload")]
+    //  this is the code for the profile image upload
     #[Route("/profile/upload", name: "profile_image_upload")]
     public function uploadProfileImage(Request $request, EntityManagerInterface $entityManager): Response
     {

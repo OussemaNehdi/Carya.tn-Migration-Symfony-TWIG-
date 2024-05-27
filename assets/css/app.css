@@ -672,12 +672,14 @@ ul{
     position: relative;
     display: inline-block;
     margin-bottom: 10px;
+    border-radius: 50%;
+    border: 3px solid transparent;
 }
 .profile-pic {
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    border: 3px solid transparent;
+    
 }
 .edit-icon {
     position: absolute;
@@ -688,7 +690,7 @@ ul{
     transition: opacity 0.3s ease;
 }
 /* Hover effect */
-.profile-pic-container:hover .profile-pic {
+.profile-pic-container:hover{
     transition: 0.3s ease;
     border: 3px solid black;
     opacity: 0.8;
@@ -710,3 +712,187 @@ ul{
     color: rgb(117, 116, 116);
 }
 /* ------------------ end of Profile Page ------------------*/
+
+/* ------------------ Rent-a-car Page ------------------*/
+.rent-body .main-container {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+.rent-body .filter-menu {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 20%;
+    height: 100vh;
+    overflow-y: auto; /* Enable vertical scrolling */
+
+    padding: 20px 14px 10px 4px;
+    background-color: rgba(0, 0, 0, 0.795);
+    backdrop-filter: blur(5px);
+}
+.rent-body .cars-list {
+    width: 80%;
+    padding: 10px;
+}
+
+/* ============================ filter menu.php ======================== */
+.rent-body .filter-menu .container{
+    padding-left: 10px;
+    padding-right: 0;
+}
+.rent-body .filter-menu .titles{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5px;
+}
+.rent-body .filter-menu h2 {
+    color: #eebf31ea;
+    margin-bottom: 15px;
+    font-size: 30px;
+    font-weight: 600;
+}
+.rent-body .filter-menu .sub-container{
+    margin-bottom: 20px;
+}
+
+.rent-body .filter-menu h3 {
+    color: #ac881c;
+    font-size: 27px;
+    font-weight: 300;
+}
+.rent-body .filter-menu input[type="checkbox"] {
+    /* Hide the default appearance */
+    -webkit-appearance: none;
+    appearance: none;
+    /* custom checkbox appearance */
+    width: 13px; /* Set the width of the checkbox */
+    height: 13px; /* Set the height of the checkbox */
+    border: 2px solid #000; /* Set the border color */
+    background-color: rgb(56, 52, 52); /* Set the background color */
+    border-radius: 3px; /* Add border-radius for rounded corners */
+    outline: none; /* Remove outline */
+    cursor: pointer; /* Add cursor pointer */
+    margin-right: 10px;
+}
+.rent-body .filter-menu label{
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.856);
+}
+.rent-body .filter-menu input[type="checkbox"]:checked {
+    background-color: rgb(255, 215, 215);
+}
+.rent-body .filter-menu span, .rent-body .filter-menu p{
+    color: rgba(255, 255, 255, 0.856);
+    font-size: 15px;
+}
+.rent-body .filter-menu .price-range-slider {
+    width: 60%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 9px;
+    border-radius: 10px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+.rent-body .filter-menu .price-range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #8f7641e0;
+    cursor: w-resize;
+}
+.rent-body .filter-menu .apply-button{
+    background-color: #8f7641e0;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.rent-body .filter-menu .apply-button:hover {
+    background-color: #8f7641;
+}
+
+/* ============================ fetch_cars.php ============================*/
+.rent-body .cars-list .container{
+    width: 100%;
+    background-color: rgba(245, 245, 245, 0.74);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+.rent-body .cars-list .titles{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5px;
+}
+.rent-body .cars-list .titles h2{
+    margin-top: 7px;
+    margin-bottom: 5px;
+    font-size: 40px;
+    font-weight: 600;
+}
+.rent-body .cars-list .car {
+    width: 31%;
+    margin: 1%;
+    padding: 1%;
+    border: 1px solid #ccc;
+    display: inline-block;
+    vertical-align: top;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.918);
+    backdrop-filter: blur(10px);
+}
+.rent-body .cars-list .car:hover {
+    border: 1px solid #636363;
+    transition: border-color 0.2s ease-in-out;
+}
+.rent-body .cars-list .car img {
+    border-radius: 10px 10px 0 0;
+    width: 100%;
+    height: 190px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+.rent-body .cars-list .car p {
+    margin-bottom: 0;
+}
+.rent-body .cars-list .car .rent-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.rent-body .cars-list .car button {
+    all: unset;
+    
+    padding: 2px 6px 2px 6px;
+    background-color: rgba(231, 142, 70, 0.925);
+    font-family: 'Poppins', sans-serif;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+    color:white;
+}
+.rent-body .cars-list .car a {
+    all: unset;
+
+    color: white;
+}
+.rent-body .cars-list .car button:hover {
+    background-color: rgba(247, 173, 112, 0.836);
+    border: 2px solid #f08725;
+    transition: border-color 0.2s ease-in-out;
+}
+/* ------------------ End of rent_car.php ------------------*/
