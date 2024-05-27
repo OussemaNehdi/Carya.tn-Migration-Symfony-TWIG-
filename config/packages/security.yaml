@@ -30,7 +30,7 @@ security:
 
     access_control:
 
-        - { path: ^/profile, roles: ROLE_USER }
+        
 
 when@test:
     security:

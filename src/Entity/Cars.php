@@ -6,10 +6,12 @@ use App\Repository\CarsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\Types\Integer;
-
+use Doctrine\ORM\EntityManagerInterface;
 #[ORM\Entity(repositoryClass: CarsRepository::class)]
 class Cars
 {
+  
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -140,4 +142,27 @@ class Cars
 
         return $this;
     }
+
+
+    public function getUnavailableDates(EntityManagerInterface $entityManager ): array
+    {
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('c')
+            ->from('App\Entity\Commands', 'c')
+            ->where('c.car_id = :car_id')
+            ->setParameter('car_id', $this->getId());
+
+        $commands = $qb->getQuery()->getResult();
+
+        $unavailableDates = [];
+        foreach ($commands as $command) {
+            $unavailableDates[] = $command->getStartDate()->format('Y-m-d');
+            $unavailableDates[] = $command->getEndDate()->format('Y-m-d');
+        }
+
+        return $unavailableDates;
+    }
+
+
+
 }
