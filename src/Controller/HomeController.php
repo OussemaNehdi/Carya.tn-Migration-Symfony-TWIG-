@@ -2,23 +2,42 @@
 
 namespace App\Controller;
 
-use App\Form\ContactType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Users;
 use App\Entity\Cars;
 use App\Entity\Commands;
+use App\Form\LoginType;
+use App\Form\SignupType;
+use App\Form\ContactType;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Attribute\Route;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Psr\Log\LoggerInterface;
 use App\Repository\CarsRepository;
 
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+
+
 class HomeController extends AbstractController
 {
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
+
     #[Route('/', name: 'home')]
     public function home(): Response
     {
@@ -134,11 +153,96 @@ class HomeController extends AbstractController
         ]);
     }
 
+    
     #[Route('/login', name: 'login')]
-    public function login(): Response
+    public function login(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager, AuthenticationUtils $authenticationUtils, SessionInterface $session, LoggerInterface $logger): Response
     {
+        // Check for any authentication errors from previous login attempts
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // Get the last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+        
+        $loginForm = $this->createForm(LoginType::class);
+        $loginForm->handleRequest($request);
+        
+        
+        if ($loginForm->isSubmitted() && $loginForm->isValid()) {
+            $formData = $loginForm->getData();
+            
+            $email = $formData['_username'];
+
+            $password = $formData['_password'];
+        
+            $user = $entityManager->getRepository(Users::class)->findOneBy(['email' => $email]);
+            
+            if ($user && $passwordHasher->isPasswordValid($user, $password)) {
+                $session->set('user_first_name', $user->getFirstName());
+                $session->set('user_id', $user->getId());
+
+                $this->security->login($user);
+
+                $rememberMe = $request->request->get('_remember_me');
+                if ($rememberMe) {
+                    // Create a remember-me cookie
+                    $token = $this->container->get('security.token_storage')->getToken();
+                    $this->container->get('security.token_storage')->setToken($token);
+
+                    // Send remember-me cookie to the user
+                    $response = new Response();
+                    $rememberMeService = $this->container->get('security.authentication.rememberme.services.persistent.remember_me');
+                    $rememberMeService->loginSuccess($request, $response, $token);
+                }
+
+                return $this->redirectToRoute('my_cars');
+            } else {
+                // Handle invalid credentials
+                // You can add an error message and display it in the login form
+                $this->addFlash('error', 'Invalid email or password.');
+            }
+        
+        }
+        
+
+
+        $signupForm = $this->createForm(SignupType::class);
+        $signupForm->handleRequest($request);
+
+        if ($signupForm->isSubmitted() && $signupForm->isValid()) {
+            /** @var Users $user */
+            $user = $signupForm->getData();
+
+            // Set default values
+            $user->setRoles(['ROLE_USER']);
+            $user->setProfileImage('default.png');
+            $user->setCountry('Germany');
+            $user->setState('Bayern');
+            $user->setCreationDate(new \DateTime());
+
+            $plainPassword = $signupForm->get('plainPassword')->getData();
+            $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+            $user->setPassword($hashedPassword);
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            // Redirect or any other post-signup action
+            return $this->redirectToRoute('login');
+        }
+
         return $this->render('home/login.html.twig', [
             'bodyclass' => 'loginBody',
+            'loginForm' => $loginForm->createView(),
+            'signupForm' => $signupForm->createView(),
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
+    }
+    
+    #[Route('/forgot-password', name: 'forgot_password')]
+    public function forgotPassword(): Response
+    {
+        return $this->render('home/forgotPassword.html.twig', [
+            'bodyclass' => 'forgotPasswordBody',
         ]);
     }
 
