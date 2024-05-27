@@ -3,13 +3,13 @@
 
 {% block body %}
 {% include '/home/filter.html.twig' %}
-<div class="container">
+<div class="main-container">
     <div class="titles">
         <h2>Available Cars</h2>
     </div>
-    <div class="cars-container">
+    <div class="main-container">
         {% for car in cars %}
-            <div class="car">
+            <div class="cars-list content-container">
                 <img src="{{ asset('images/car_images/' ~ car.image) }}" alt="{{ car.brand ~ ' ' ~ car.model }}">
                 <p><strong>{{ car.brand ~ ' ' ~ car.model }}</strong></p>
                 <p><strong>Color:</strong> {{ car.color }}</p>

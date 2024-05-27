@@ -124,29 +124,67 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/myCars', name: 'my_cars')]
-    public function myCars(): Response
-    {
-        // Check if the user is authenticated
-        if (!$this->getUser()) {
-            return $this->redirectToRoute('login');
-        }
+    // #[Route('/myCars', name: 'my_cars')]
+    // public function myCars(): Response
+    // {
+    //     // Check if the user is authenticated
+    //     if (!$this->getUser()) {
+    //         return $this->redirectToRoute('login');
+    //     }
 
-        return $this->render('home/myCars.html.twig', [
-            'bodyclass' => 'myCarsBody',
-        ]);
-    }
+    //     return $this->render('home/myCars.html.twig', [
+    //         'bodyclass' => 'myCarsBody',
+    //     ]);
+    // }
+    
     //todo
-    #[Route('/myCarsTesting', name: 'my_cars_testing')]
-    public function myCarsTesting(): Response
+    #[Route('/myCars', name: 'my_cars')]
+    public function myCars(CarsRepository $CarsRepository,Request $request , EntityManagerInterface $entityManager): Response
     {
-        // Check if the user is authenticated
-        
 
+       
+        $filters = $CarsRepository->constructFilterQuery($request);       
+        if (!empty($filters)) {
+            $Cars = $CarsRepository->findByFilters($filters);
+        } else {
+            $Cars=$CarsRepository->getAllCars();
+        }
         return $this->render('home/myCars.html.twig', [
-            'bodyclass' => 'myCarsBody',
+            'bodyclass' => 'rentCarsBody',
+            'cars' => $Cars,
+            'brands'=>$CarsRepository-> getDistinctValues('brand'),
+            'models'=>$CarsRepository->getDistinctValues( 'model'),
+            'colors'=>$CarsRepository->getDistinctValues( 'color'),
+            'max_km'=>$CarsRepository->getMaxValue('km'),
+            'max_price'=>$CarsRepository->getMaxValue('price'),
+            'filter_data' => $filters,
+
         ]);
     }
+    //
+    // #[Route('/rentCars', name: 'rent_cars')]
+    // public function rentCars(CarsRepository $CarsRepository,Request $request): Response
+    // {
+
+       
+    //     $filters = $CarsRepository->constructFilterQuery($request);       
+    //     if (!empty($filters)) {
+    //         $Cars = $CarsRepository->findByFilters($filters);
+    //     } else {
+    //         $Cars=$CarsRepository->getAllCars();
+    //     }
+    //     return $this->render('home/rentCars.html.twig', [
+    //         'bodyclass' => 'rentCarsBody',
+    //         'cars' => $Cars,
+    //         'brands'=>$CarsRepository-> getDistinctValues('brand'),
+    //         'models'=>$CarsRepository->getDistinctValues( 'model'),
+    //         'colors'=>$CarsRepository->getDistinctValues( 'color'),
+    //         'max_km'=>$CarsRepository->getMaxValue('km'),
+    //         'max_price'=>$CarsRepository->getMaxValue('price'),
+    //         'filter_data' => $filters,
+
+    //     ]);
+    // }
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
     public function dashboard(EntityManagerInterface $entityManager): Response
@@ -299,7 +337,7 @@ class HomeController extends AbstractController
             'profileForm' => $form->createView(),
             'user' => $user,
             'activeRentingCars' => $activeRentingCars,
-            'bodyclass' => 'profile-body',
+            'bodyclass' => 'profileBody',
 
         ]);
     }   
@@ -309,7 +347,7 @@ class HomeController extends AbstractController
     #[Route("/profile/upload", name: "profile_image_upload")]
     public function uploadProfileImage(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier());
+        $user = $this->getUser();
         $profileImage = $request->files->get('profile_image');
         
         if ($profileImage) {
@@ -336,15 +374,11 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('profile');
     }
 
-    #[Route('/profile/export_rent_history', name: 'export_rent_history')]
+    #[Route('/export_rent_history', name: 'export_rent_history')]
     public function exportRentHistory(EntityManagerInterface $entityManager): Response
     {
-        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier());
-        if (!$user) {
-            throw $this->createAccessDeniedException('You must be logged in to access this page.');
-        }
-
-        $commands = $entityManager->getRepository(Commands::class)->findBy(['user_id' => ($user->getId())]);
+        $user = $this->getUser();
+        $commands = $entityManager->getRepository(Commands::class)->findBy(['user' => $user]);
 
         $filename = 'rent_history_' . date('Y-m-d') . '.pdf';
         $pdf = new TCPDF();
@@ -361,27 +395,21 @@ class HomeController extends AbstractController
 
         $pdf->SetFont('helvetica', '', 12);
 
-        $pdf->Cell(40, 10, 'Car Brand', 1);
-        $pdf->Cell(40, 10, 'Car Model', 1);
+        $pdf->Cell(40, 10, 'Car', 1);
         $pdf->Cell(40, 10, 'Start Date', 1);
         $pdf->Cell(40, 10, 'End Date', 1);
         $pdf->Cell(40, 10, 'Total Price', 1);
 
         foreach ($commands as $command) {
             $pdf->Ln();
-            $pdf->Cell(40, 10, $command->getCarId()->getBrand(), 1);
             $pdf->Cell(40, 10, $command->getCarId()->getModel(), 1);
             $pdf->Cell(40, 10, $command->getStartDate()->format('Y-m-d'), 1);
             $pdf->Cell(40, 10, $command->getEndDate()->format('Y-m-d'), 1);
             $pdf->Cell(40, 10, $command->getCarId()->getPrice(), 1);
         }
 
-        $pdfContent = $pdf->Output($filename, 'S');
+        $pdf->Output($filename, 'D');
 
-        $response = new Response($pdfContent);
-        $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-Disposition', 'attachment;filename="' . $filename . '"');
-
-        return $response;
+        return new Response();
     }
 }
