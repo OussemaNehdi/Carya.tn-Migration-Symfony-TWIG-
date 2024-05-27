@@ -2,6 +2,41 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+<script>
+    window.addEventListener('scroll', function() {
+    var filterMenuContainer = document.getElementById('filterMenuContainer');
+    var contentContainer = document.querySelector('.content-container');
+    var scrollY = window.scrollY || window.pageYOffset;
+
+    if (scrollY > contentContainer.offsetTop) {
+        filterMenuContainer.style.top = (scrollY - contentContainer.offsetTop) + 'px';
+    } else {
+        filterMenuContainer.style.top = '0';
+    }
+    });
+
+
+   
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for car in cars %}
+            document.getElementById("rentCarButton{{ car.id }}").addEventListener("click", function() {
+                // Show the corresponding popup and overlay
+                document.getElementById("popup{{ car.id }}").style.display = "block";
+                document.getElementById("overlay").style.display = "block";
+            });
+        {% endfor %}
+
+        // Close all popups and overlay when clicking outside the popups
+        document.getElementById("overlay").addEventListener("click", function() {
+            {% for car in cars %}
+                document.getElementById("popup{{ car.id }}").style.display = "none";
+            {% endfor %}
+            document.getElementById("overlay").style.display = "none";
+        });
+    });
+
+</script>
+
 <div class="main-container">
     <div class="filter-menu" id="filterMenuContainer">
         {% include '/home/filter.html.twig' %}
@@ -23,24 +58,17 @@
                                 <button id="rentCarButton{{ car.id }}">Rent</button>
                         </div>
                     </div>
+                    <div id="popup{{ car.id }}" class="popup-rent-container">
+                        {% include '/home/rent_car_popup.html.twig' with {'car': car} %}
+                    </div>
                 {% endfor %}
             </div>
         </div>
     </div>
 </div>
-<script>
-    window.addEventListener('scroll', function() {
-    var filterMenuContainer = document.getElementById('filterMenuContainer');
-    var contentContainer = document.querySelector('.content-container');
-    var scrollY = window.scrollY || window.pageYOffset;
 
-    if (scrollY > contentContainer.offsetTop) {
-        filterMenuContainer.style.top = (scrollY - contentContainer.offsetTop) + 'px';
-    } else {
-        filterMenuContainer.style.top = '0';
-    }
-    });
-</script>
+
+
 {% endblock %}
 
 
