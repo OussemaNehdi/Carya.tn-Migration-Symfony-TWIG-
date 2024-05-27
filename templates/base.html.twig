@@ -28,7 +28,7 @@
                                 <li><a class="navbar-dropdown-link" href="{{ path('my_cars') }}">My Cars</a></li>
                             </ul>
                         </li>
-                        {% if app.session.get('role') == 'admin' %}
+                        {% if is_granted('ROLE_ADMIN') %}
                             <li class="navbar-link"><a href="{{ path('admin_dashboard') }}">Admin Dashboard</a></li>
                         {% endif %}
                         <li class="navbar-link"><a href="{{ path('about') }}">About</a></li>
@@ -49,6 +49,9 @@
         </nav>
         <!-- End of The Code for The NAV-BAR -->
 
+        <!-- The Code for The Notifications -->
+        {% include 'partials/notifications.html.twig' %}
+        
         {% block body %}{% endblock %}
         {# <script src=" {{ asset('js/' ~ nameJS ~ '.js') }}"> 
         --> To put this line of code when inheriting from this template
