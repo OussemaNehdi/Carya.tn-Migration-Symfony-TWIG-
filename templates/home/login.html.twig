@@ -1,27 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Login{% endblock %}
-
 {% block body %}
-{# Removing PHP code and handling the logic in the controller or a service #}
+
+{% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+{% endif %}
 
 <div class="login-container">
     <div class="box">
-        <!---------------------------- Login Box ---------------------------->
-        <form action="{{ path('login_route') }}" method="POST">
-            <div class="box-login" id="login">
-                <div class="top-header">
-                    <h3>Hello, Again!</h3>
-                    <small>We are happy to have you back.</small>
-                </div>  
+        <!-- -------------------------- Login Box -------------------------- -->
+        <div class="box-login" id="login">
+            <div class="top-header">
+                <h3>Hello, Again!</h3>
+                <small>We are happy to have you back.</small>
+            </div>
+            {{ form_start(loginForm, {'attr': {'class': 'login-form', 'method': 'POST', 'action': path('login')}}) }}
                 <div class="input-group">
                     <div class="input-field">
-                        <input type="text" class="input-box" id="logEmail" name="email" required>
-                        <label for="logEmail">Email address</label>
+                        {{ form_widget(loginForm._username) }}
+                        {{ form_label(loginForm._username) }}
                     </div>
                     <div class="input-field">
-                        <input type="password" class="input-box" id="logPassword" name="password" required>
-                        <label for="logPassword">Password</label>
+                        {{ form_widget(loginForm._password) }}
+                        {{ form_label(loginForm._password) }}
                         <div class="eye-area">
                             <div class="eye-box" onclick="myLogPassword()">
                                 <i class="fa-regular fa-eye" id="eye"></i>
@@ -31,40 +32,42 @@
                     </div>
                 </div>
                 <div class="remember">
-                    <input type="checkbox" id="formCheck" class="check">
+                    <input name='_remember_me' type="checkbox" id="formCheck" class="check">
                     <label for="formCheck">Remember Me</label>
                 </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 <div class="input-field">
                     <input type="submit" class="input-submit" value="Sign In" required>
                 </div>
                 <div class="forgot">
-                    <a href="{{ path('forgot_password_route') }}">Forgot password?</a>
+                    <a href="{{ path('forgot_password') }}">Forgot password?</a>
                 </div>
+            {{ form_end(loginForm) }}
+        </div>
+
+        <!-- -------------------------- Signup Box -------------------------- -->
+        <div class="box-register" id="register">
+            <div class="top-header">
+                <h3>Sign Up, Now!</h3>
+                <small>We are happy to have you with us.</small>
             </div>
-        </form>
-        <!---------------------------- Signup Box ---------------------------->
-        <form action="{{ path('signup_route') }}" method="POST">
-            <div class="box-register" id="register">
-                <div class="top-header">
-                    <h3>Sign Up, Now!</h3>
-                    <small>We are happy to have you with us.</small>
-                </div>
+            {{ form_start(signupForm, {'attr': {'class': 'signup-form'}}) }}
                 <div class="input-group">
                     <div class="input-field">
-                        <input type="text" class="input-box" id="regUsername" name="fname" required>
-                        <label for="regUsername">First Name</label>
+                        {{ form_widget(signupForm.firstName) }}
+                        {{ form_label(signupForm.firstName) }}
                     </div>
                     <div class="input-field">
-                        <input type="text" class="input-box" id="regUsername" name="lname" required>
-                        <label for="regUsername">Last Name</label>
+                        {{ form_widget(signupForm.lastName) }}
+                        {{ form_label(signupForm.lastName) }}
                     </div>
                     <div class="input-field">
-                        <input type="text" class="input-box" id="regEmail" name="email" required>
-                        <label for="regEmail">Email address</label>
+                        {{ form_widget(signupForm.email) }}
+                        {{ form_label(signupForm.email) }}
                     </div>
                     <div class="input-field">
-                        <input type="password" class="input-box" id="regPassword" name="password" required>
-                        <label for="regPassword">Password</label>
+                        {{ form_widget(signupForm.plainPassword) }}
+                        {{ form_label(signupForm.plainPassword) }}
                         <div class="eye-area">
                             <div class="eye-box" onclick="myRegPassword()">
                                 <i class="fa-regular fa-eye" id="eye-2"></i>
@@ -73,23 +76,83 @@
                         </div>
                     </div>
                 </div>
-                <div class="radio-buttons">
-                    <input type="radio" id="formCheck1" name="role" value="customer" checked>
-                    <label for="formCheck1">Customer</label>
-                    <input type="radio" id="formCheck2" name="role" value="seller">
-                    <label for="formCheck2">Seller</label>
-                </div>
                 <div class="input-field">
-                    <input type="submit" class="input-submit" value="Sign Up" required>
+                    {{ form_widget(signupForm.submit) }}
                 </div>
-            </div>
-            <div class="switch">
-                <a href="#" class="login active" onclick="login()">Login</a>
-                <a href="#" class="register" onclick="register()">Register</a>
-                <div class="btn-active" id="btn"></div>
-            </div>
-        </form>
+            {{ form_end(signupForm) }}
+        </div>
+        <div class="switch">
+            <a href="#" class="login active" onclick="loginSwitch()">Login</a>
+            <a href="#" class="register" onclick="registerSwitch()">Register</a>
+            <div class="btn-active" id="btn"></div>
+        </div>
     </div>
 </div>
 
+<!-- Slide animation -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var slide = '{{ app.request.query.get("slide", "login") }}';
+
+        if (slide === 'register') {
+            registerSwitch(); // If the query parameter is "register", show the register slide
+        } else {
+            loginSwitch(); // Otherwise, show the login slide (default)
+        }
+    });
+
+    
+
+    function loginSwitch() {
+        var x = document.getElementById('login');
+        var y = document.getElementById('register');
+        var z = document.getElementById('btn');
+
+        x.style.left = "27px";
+        y.style.right = "-350px";
+        z.style.left = "0px";
+    }
+
+    function registerSwitch() {
+        var x = document.getElementById('login');
+        var y = document.getElementById('register');
+        var z = document.getElementById('btn');
+
+        x.style.left = "-350px";
+        y.style.right = "25px";
+        z.style.left = "150px";
+    }
+
+    // View Password codes
+    function myLogPassword() {
+        var a = document.getElementById("login_password");
+        var b = document.getElementById("eye");
+        var c = document.getElementById("eye-slash");
+        
+        if (a.type === "password") {
+            a.type = "text";
+            b.style.opacity = "0";
+            c.style.opacity = "1";
+        } else {
+            a.type = "password";
+            b.style.opacity = "1";
+            c.style.opacity = "0";
+        }
+    }
+    function myRegPassword() {
+        var d = document.getElementById("signup_plainPassword");
+        var b = document.getElementById("eye-2");
+        var c = document.getElementById("eye-slash-2");
+
+        if (d.type === "password") {
+            d.type = "text";
+            b.style.opacity = "0";
+            c.style.opacity = "1";
+        } else {
+            d.type = "password";
+            b.style.opacity = "1";
+            c.style.opacity = "0";
+        }
+    }
+</script>
 {% endblock %}

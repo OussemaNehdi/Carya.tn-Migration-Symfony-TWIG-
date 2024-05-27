@@ -3,14 +3,6 @@
 {% block body %}
     <div class="contact_container">
         <h2>Contact Us</h2>
-
-        {% for message in app.flashes('success') %}
-            <p class="success">{{ message }}</p>
-        {% endfor %}
-        
-        {% for message in app.flashes('error') %}
-            <p class="error">{{ message }}</p>
-        {% endfor %}
         
         <p>We'd love to hear from you! Please fill out the form below to get in touch with us.</p>
         
