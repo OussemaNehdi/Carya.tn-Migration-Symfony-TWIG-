@@ -112,6 +112,17 @@ class HomeController extends AbstractController
             'bodyclass' => 'myCarsBody',
         ]);
     }
+    //todo
+    #[Route('/myCarsTesting', name: 'my_cars_testing')]
+    public function myCarsTesting(): Response
+    {
+        // Check if the user is authenticated
+        
+
+        return $this->render('home/myCars.html.twig', [
+            'bodyclass' => 'myCarsBody',
+        ]);
+    }
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
     public function dashboard(EntityManagerInterface $entityManager): Response
@@ -159,4 +170,5 @@ class HomeController extends AbstractController
             'bodyclass' => 'profileBody',
         ]);
     }
+
 }
