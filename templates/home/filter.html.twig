@@ -70,4 +70,17 @@
     function updateRangeValue(rangeId, spanId, newValue) {
         document.getElementById(spanId).innerText = newValue;
     }
+    
+    window.addEventListener('scroll', function() {
+    var filterMenuContainer = document.getElementById('filterMenuContainer');
+    var contentContainer = document.querySelector('.content-container');
+    var scrollY = window.scrollY || window.pageYOffset;
+
+    if (scrollY > contentContainer.offsetTop) {
+        filterMenuContainer.style.top = (scrollY - contentContainer.offsetTop) + 'px';
+    } else {
+        filterMenuContainer.style.top = '0';
+    }
+    });
+
 </script>
