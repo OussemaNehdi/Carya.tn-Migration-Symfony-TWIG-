@@ -25,6 +25,11 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use App\Form\ProfileType;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use TCPDF;
+
+
 
 
 class HomeController extends AbstractController
@@ -237,11 +242,106 @@ class HomeController extends AbstractController
             'bodyclass' => 'homeBody',
         ]);
     }
+
     #[Route('/profile', name: 'profile')]
-    public function profile(): Response
+    public function Profile(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+        $form = $this->createForm(ProfileType::class, $user);
+
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($user);
+            $entityManager->flush();
+            
+            $this->addFlash('success', 'Profile updated successfully.');
+            return $this->redirectToRoute('profile');
+        }
+
+        // Fetch active renting cars logic goes here
+        $activeRentingCars = $entityManager->getRepository(Cars::class)->findActiveRentingCarsByUser($user);
+
+
+
+
         return $this->render('home/profile.html.twig', [
+            'profileForm' => $form->createView(),
+            'user' => $user,
+            'activeRentingCars' => $activeRentingCars,
             'bodyclass' => 'profileBody',
+
         ]);
+    }   
+
+//  this is the code for the profile image upload
+
+    #[Route("/profile/upload", name: "profile_image_upload")]
+    public function uploadProfileImage(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        $profileImage = $request->files->get('profile_image');
+        
+        if ($profileImage) {
+            $newFilename = uniqid() . '.' . $profileImage->guessExtension();
+            
+            try {
+                $profileImage->move(
+                    $this->getParameter('profile_image_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                // ... handle exception if something happens during file upload
+                $this->addFlash('error', 'An error occurred while uploading the profile image.');
+                return $this->redirectToRoute('profile');
+            }
+            
+            $user->setProfileImage($newFilename);
+            $entityManager->persist($user);
+            $entityManager->flush();
+            
+            $this->addFlash('success', 'Profile image updated successfully.');
+        }
+        
+        return $this->redirectToRoute('profile');
+    }
+
+    #[Route('/export_rent_history', name: 'export_rent_history')]
+    public function exportRentHistory(EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        $commands = $entityManager->getRepository(Commands::class)->findBy(['user' => $user]);
+
+        $filename = 'rent_history_' . date('Y-m-d') . '.pdf';
+        $pdf = new TCPDF();
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Your Name');
+        $pdf->SetTitle('Rent History');
+        $pdf->SetSubject('Rent History');
+        $pdf->SetKeywords('Rent, History');
+
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        $pdf->AddPage();
+
+        $pdf->SetFont('helvetica', '', 12);
+
+        $pdf->Cell(40, 10, 'Car', 1);
+        $pdf->Cell(40, 10, 'Start Date', 1);
+        $pdf->Cell(40, 10, 'End Date', 1);
+        $pdf->Cell(40, 10, 'Total Price', 1);
+
+        foreach ($commands as $command) {
+            $pdf->Ln();
+            $pdf->Cell(40, 10, $command->getCarId()->getModel(), 1);
+            $pdf->Cell(40, 10, $command->getStartDate()->format('Y-m-d'), 1);
+            $pdf->Cell(40, 10, $command->getEndDate()->format('Y-m-d'), 1);
+            $pdf->Cell(40, 10, $command->getCarId()->getPrice(), 1);
+        }
+
+        $pdf->Output($filename, 'D');
+
+        return new Response();
     }
 }
