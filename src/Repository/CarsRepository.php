@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Users;
+use App\Entity\Commands;
 
 /**
  * @extends ServiceEntityRepository<Cars>
@@ -150,19 +151,25 @@ public function findByFilters(array $filters): array
             ->getSingleScalarResult();
     }
 
+    /**
+     * Find active renting cars by user
+     *
+     * @param Users $user
+     * @return Cars[]
+     */
     public function findActiveRentingCarsByUser(Users $user): array
     {
-        $qb = $this->createQueryBuilder('cars');
+        $qb = $this->createQueryBuilder('c')
+            ->innerJoin('App\Entity\Commands', 'cmd', 'WITH', 'cmd.car_id = c.id')
+            ->where('cmd.user_id = :user_id')
+            ->andWhere('cmd.start_date <= :today')
+            ->andWhere('cmd.end_date >= :today')
+            ->setParameter('user_id', $user->getId())
+            ->setParameter('today', new \DateTime())
+            ->getQuery();
 
-        $qb->join('cars.rentals', 'rentals')
-           ->andWhere('rentals.user = :user')
-           ->andWhere('rentals.endDate >= :currentDate')
-           ->setParameter('user', $user)
-           ->setParameter('currentDate', new \DateTime());
-
-        return $qb->getQuery()->getResult();
+        return $qb->getResult();
     }
-
 
 }
 
