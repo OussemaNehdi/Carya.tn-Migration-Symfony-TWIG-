@@ -141,14 +141,17 @@ class HomeController extends AbstractController
     #[Route('/myCars', name: 'my_cars')]
     public function myCars(CarsRepository $CarsRepository,Request $request , EntityManagerInterface $entityManager): Response
     {
+        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier());
+        
 
-       
-        $filters = $CarsRepository->constructFilterQuery($request);       
+        
+        $filters = $CarsRepository->constructFilterQuery($request); 
         if (!empty($filters)) {
             $Cars = $CarsRepository->findByFilters($filters);
         } else {
             $Cars=$CarsRepository->getAllCars();
         }
+        $Cars = $CarsRepository->findByUserId($user->getId());
         return $this->render('home/myCars.html.twig', [
             'bodyclass' => 'rentCarsBody',
             'cars' => $Cars,
@@ -158,7 +161,6 @@ class HomeController extends AbstractController
             'max_km'=>$CarsRepository->getMaxValue('km'),
             'max_price'=>$CarsRepository->getMaxValue('price'),
             'filter_data' => $filters,
-
         ]);
     }
     //
