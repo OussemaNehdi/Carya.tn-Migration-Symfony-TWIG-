@@ -1,0 +1,65 @@
+{# //this file does not extend its not a page instead it is a snippet that is included in the rentCars.html.twig file #}
+
+{% include 'CaryaMigration\src\Entity\Cars.php' %}
+{% include 'CaryaMigration\src\Entity\Cars.php' %}
+
+{% set filter_data = Car.constructFilterQuery(app.request.query.all) %}
+
+{% macro generateInputCheckboxes(data, filterData, filterName) %}
+    {% for item in data %}
+        <label>
+            <input type="checkbox" name="{{ filterName }}[]" value="{{ item }}" {% if isChecked(item, filterData, filterName) %}checked{% endif %}>
+            {{ item }}
+        </label><br>
+    {% endfor %}
+{% endmacro %}
+
+{% macro generateRangeInput(id, name, min, max, value, filterData) %}
+    <input class="price-range-slider" type="range" id="{{ id }}" name="{{ name }}" min="{{ min }}" max="{{ max }}" value="{{ filterData[name][0] ?? value }}" oninput="updateRangeValue('{{ id }}', '{{ id }}_val', this.value)">
+    <span id="{{ id }}_val">{{ filterData[name][0] ?? value }}</span>
+{% endmacro %}
+
+{% macro isChecked(value, filterData, filterName) %}
+    {% if filterData[filterName] is defined and value in filterData[filterName] %}
+        checked
+    {% endif %}
+{% endmacro %}
+
+<div class="container">
+    <div class="titles">
+        <h2>Filter Menu</h2>
+    </div>
+    <form action="http://localhost/Mini-PHP-Project/carya.tn/src/controllers/filter_controller.php" method="POST">
+        <div class="sub-container">
+            <h3>Brand</h3>
+            {{ generateInputCheckboxes(brands, filter_data, 'brand') }}
+        </div>
+        <div class="sub-container">
+            <h3>Model</h3>
+            {{ generateInputCheckboxes(models, filter_data, 'model') }}
+        </div>
+
+        <div class="sub-container">
+            <h3>Color</h3>
+            {{ generateInputCheckboxes(colors, filter_data, 'color') }}
+        </div>
+
+        <div class="sub-container">
+            <h3>Km Range</h3>
+            {{ generateRangeInput('km_min', 'km_min', 0, max_km, 0, filter_data) }} <span>km</span><br>
+            {{ generateRangeInput('km_max', 'km_max', 0, max_km, max_km, filter_data) }} <span>km</span><br>
+        </div>
+
+        <div class="sub-container">
+            <h3>Price Range</h3>
+            {{ generateRangeInput('price_min', 'price_min', 0, max_price, 0, filter_data) }}<span>$</span><br>
+            {{ generateRangeInput('price_max', 'price_max', 0, max_price, max_price, filter_data) }}<span>$</span><br>
+            <input class="apply-button" type="submit" value="Apply Filters">
+        </div>
+    </form>
+</div>
+<script>
+    function updateRangeValue(rangeId, spanId, newValue) {
+        document.getElementById(spanId).innerText = newValue;
+    }
+</script>
