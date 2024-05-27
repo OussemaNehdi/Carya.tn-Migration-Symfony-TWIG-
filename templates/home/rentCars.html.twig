@@ -2,26 +2,45 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-{% include '/home/filter.html.twig' %}
 <div class="main-container">
-    <div class="titles">
-        <h2>Available Cars</h2>
+    <div class="filter-menu" id="filterMenuContainer">
+        {% include '/home/filter.html.twig' %}
     </div>
-    <div class="main-container">
-        {% for car in cars %}
-            <div class="cars-list content-container">
-                <img src="{{ asset('images/car_images/' ~ car.image) }}" alt="{{ car.brand ~ ' ' ~ car.model }}">
-                <p><strong>{{ car.brand ~ ' ' ~ car.model }}</strong></p>
-                <p><strong>Color:</strong> {{ car.color }}</p>
-                <p><strong>Kilometers:</strong> {{ car.km }} km</p>
-                <p><strong>Price:</strong> ${{ car.price }}</p>
-                <div class="rent-button">
-                    
-                        <button id="rentCarButton{{ car.id }}">Rent</button>
-                    
-     
-                </div>
+    <div class="cars-list content-container">
+        <div class="container">
+            <div class="titles">
+                <h2>Available Cars</h2>
             </div>
-        {% endfor %}
+            <div class="cars-container">
+                {% for car in cars %}
+                    <div class="car">
+                        <img src="{{ asset('images/car_images/' ~ car.image) }}" alt="{{ car.brand ~ ' ' ~ car.model }}">
+                        <p><strong>{{ car.brand ~ ' ' ~ car.model }}</strong></p>
+                        <p><strong>Color:</strong> {{ car.color }}</p>
+                        <p><strong>Kilometers:</strong> {{ car.km }} km</p>
+                        <p><strong>Price:</strong> ${{ car.price }}</p>
+                        <div class="rent-button">
+                                <button id="rentCarButton{{ car.id }}">Rent</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.addEventListener('scroll', function() {
+    var filterMenuContainer = document.getElementById('filterMenuContainer');
+    var contentContainer = document.querySelector('.content-container');
+    var scrollY = window.scrollY || window.pageYOffset;
+
+    if (scrollY > contentContainer.offsetTop) {
+        filterMenuContainer.style.top = (scrollY - contentContainer.offsetTop) + 'px';
+    } else {
+        filterMenuContainer.style.top = '0';
+    }
+    });
+</script>
 {% endblock %}
+
 

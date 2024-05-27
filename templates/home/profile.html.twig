@@ -10,11 +10,7 @@
         <div class="col-md-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                 <div class="profile-pic-container">
-                    {% if user.profileImage %}
-                        <img id="profile-img" class="profile-pic" src="{{ asset('images/user_images/' ~ user.profileImage) }}" onclick="document.getElementById('upload-profile-img').click();">
-                    {% else %}
-                        <img id="profile-img" class="profile-pic" src="https://www.w3schools.com/howto/img_avatar2.png" onclick="document.getElementById('upload-profile-img').click();">
-                    {% endif %}
+                    <img id="profile-img" class="profile-pic" src="{{ asset('images/user_images/' ~ user.profileImage) }}" onclick="document.getElementById('upload-profile-img').click();">
                     <i class="fas fa-edit fa-2x edit-icon"></i>
                 </div>
                 <span class="font-weight-bold">{{ user.firstName }} {{ user.lastName }}</span>

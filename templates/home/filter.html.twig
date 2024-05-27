@@ -12,7 +12,6 @@
     <div class="titles">
         <h2>Filter Menu</h2>
     </div>
-    
         {% if app.request.attributes.get('_route') == 'my_cars' %}
             <form action="{{ path('my_cars') }}" method="POST">
         {% else %}
