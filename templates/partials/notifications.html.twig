@@ -3,7 +3,7 @@
 {% for type, messages in app.session.flashbag.all() %}
     {% for message in messages %}
         <div class="notification notification-{{ type }}">
-            {{ message }}
+            <p>{{ message }} </p>
         </div>
     {% endfor %}
 {% endfor %}
@@ -14,11 +14,11 @@
         const notifications = document.querySelectorAll('.notification');
         notifications.forEach(notification => {
             setTimeout(() => {
-                notification.style.opacity = 0;
+                notification.classList.add('fade-out');
                 setTimeout(() => {
                     notification.remove();
                 }, 1000); // Remove notification after fade out
-            }, 5000); // Fade out after 5 seconds
+            }, 2000); // Fade out after 5 seconds
         });
     });
 </script>

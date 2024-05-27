@@ -36,6 +36,53 @@ ul{
     list-style-type: none;
 }
 
+/* ================== Notification ================== */
+.notification {
+    position: fixed;
+    top: 70px; /* Adjust based on the height of your navbar */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1em 2em;
+    margin: 1em 0;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+    width: 70%;
+    max-width: 600px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.notification p {
+    margin: 0;
+}
+
+.notification-success {
+    background: rgba(76, 175, 80, 0.7); /* Green */
+    color: white;
+}
+
+.notification-error {
+    background: rgba(244, 67, 54, 0.7); /* Red */
+    color: white;
+}
+
+.notification-warning {
+    background: rgba(255, 193, 7, 0.7); /* Yellow */
+    color: white;
+}
+
+.notification-info {
+    background: rgba(33, 150, 243, 0.7); /* Blue */
+    color: white;
+}
+
+.notification.fade-out {
+    opacity: 0;
+}
 /* ================== Pages / Routes ================== */
 /* ------------------ Navigation bar ------------------*/
 .navbar {
