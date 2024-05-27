@@ -39,12 +39,12 @@
                     <td>{{ user.creationDate ? user.creationDate|date('Y-m-d H:i:s') : '' }}</td>
                     <td>{{ user.roles[0] }}</td>
                     <td>
-                        {% if user.roles[0] == 'banned' %}
-                            <a href="" class="unban-link">Unban</a>
-                        {% elseif user.roles[0] == 'admin' %}
+                        {% if 'ROLE_BANNED' in user.roles %}
+                            <a href="{{ path('user_unban', {'id': user.id}) }}" class="unban-link">Unban</a>
+                        {% elseif 'ROLE_ADMIN' in user.roles %}
                             Admin
                         {% else %}
-                            <a href="" class="ban-link">Ban</a>
+                            <a href="{{ path('user_ban', {'id': user.id}) }}" class="ban-link">Ban</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -54,6 +54,7 @@
 </section>
 
 <!-- Car list -->
+<!-- Admin Dashboard -->
 <section>
     <h2>List of Cars</h2>
     <table>
@@ -74,26 +75,67 @@
         <tbody>
             {% for car in cars %}
                 <tr>
-                    <td class="car-image" data-id="{{ car.id }}">{{ car.id }}</td>
-                    <td class="car-image" data-id="{{ car.id }}">{{ car.brand }}</td>
-                    <td class="car-image" data-id="{{ car.id }}">{{ car.model }}</td>
+                    <td>{{ car.id }}</td>
+                    <td>{{ car.brand }}</td>
+                    <td>{{ car.model }}</td>
                     <td>{{ car.color }}</td>
                     <td>{{ car.km }}</td>
-                    <td>{{ car.OwnerId.id}}</td>
+                    <td>{{ car.ownerId.id }}</td>
                     <td>{{ car.price }}</td>
-                    <td></td>
+                    <td>{{ car.available ? 'Yes' : 'No' }}</td>
                     <td>
-                        <a href="delete_car', {id: car.id}" class="unban-link">Delete</a>
+                        <a href="{{ path('delete_car', {'id': car.id}) }}" class="delete-link">Delete</a>
                     </td>
                     <td>
                         <button id="UpdateCarBtn{{ car.id }}">Update Listing</button>
                     </td>
                 </tr>
-                
             {% endfor %}
         </tbody>
     </table>
 </section>
+
+<!-- Add Car Modal -->
+<div id="addCarModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        {% include 'forms/addCar.html.twig' %}
+    </div>
+</div>
+
+<script>
+    // Get modal element
+    var modal = document.getElementById('addCarModal');
+    // Get open modal button
+    var modalBtn = document.getElementById('addCarBtn');
+    // Get close button
+    var closeBtn = document.getElementsByClassName('close')[0];
+
+    // Listen for open click
+    modalBtn.addEventListener('click', openModal);
+    // Listen for close click
+    closeBtn.addEventListener('click', closeModal);
+    // Listen for outside click
+    window.addEventListener('click', outsideClick);
+
+    // Function to open modal
+    function openModal() {
+        modal.style.display = 'block';
+    }
+
+    // Function to close modal
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+
+    // Function to close modal if outside click
+    function outsideClick(e) {
+        if (e.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+
 
 <!-- Car commands list -->
 <section>
@@ -122,31 +164,41 @@
                     <td>{{ command.startDate ? command.startDate|date('Y-m-d') : '' }}</td>
                     <td>{{ command.endDate ? command.endDate|date('Y-m-d') : '' }}</td>
                     <td></td>
-                    <td>{{ command.confirmed ? (command.confirmed == 1 ? 'Accepted' : 'Refused') : 'Unreviewed' }}</td>
-                    {% if not command.confirmed %}
+                    <td>
+                        {% if command.confirmed is null %}
+                            Unreviewed
+                        {% elseif command.confirmed %}
+                            Accepted
+                        {% else %}
+                            Refused
+                        {% endif %}
+                    </td>
+                    {% if command.confirmed is null %}
                         <td>
-                            <form action="accept_command" method="POST">
+                            <form action="{{ path('accept_command') }}" method="POST">
                                 <input type="hidden" name="command_id" value="{{ command.id }}">
                                 <button type="submit" class="accept-command">Accept</button>
                             </form>
                         </td>
                         <td>
-                            <form action="refuse_command" method="POST">
+                            <form action="{{ path('refuse_command') }}" method="POST">
                                 <input type="hidden" name="command_id" value="{{ command.id }}">
                                 <button type="submit" class="refuse-command">Refuse</button>
                             </form>
                         </td>
                         <td>
-                            <a href="cancel_command', {id: command.id})">
-                                <button type="submit" class="refuse-command">Cancel</button>
-                            </a>
+                            <form action="{{ path('cancel_command') }}" method="POST">
+                                <input type="hidden" name="command_id" value="{{ command.id }}">
+                                <button type="submit" class="cancel-command">Cancel</button>
+                            </form>
                         </td>
                     {% else %}
                         <td></td>
                         <td>
-                            <a href="cancel_command', {id: command.id}">
-                                <button type="submit" class="refuse-command">Cancel</button>
-                            </a>
+                            <form action="{{ path('cancel_command') }}" method="POST">
+                                <input type="hidden" name="command_id" value="{{ command.id }}">
+                                <button type="submit" class="cancel-command">Cancel</button>
+                            </form>
                         </td>
                         <td></td>
                     {% endif %}
@@ -155,6 +207,7 @@
         </tbody>
     </table>
 </section>
+
 
 
 {% endblock %}

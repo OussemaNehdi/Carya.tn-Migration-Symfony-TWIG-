@@ -196,4 +196,14 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function banUser(): void
+    {
+        $this->roles = ['ROLE_BANNED'];
+    }
+
+    public function unbanUser(): void
+    {
+        $this->roles = ['ROLE_USER'];
+    }
 }
