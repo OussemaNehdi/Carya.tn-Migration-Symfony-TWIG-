@@ -2,6 +2,28 @@
 
 {% block body %}
 {% include '/home/filter.html.twig' %}
-
+<div class="container">
+    <div class="titles">
+        <h2>My Cars</h2>
+        
+    </div>
+    <div class="main-container">
+        {% for car in cars %}
+            <div class="car">
+                <img src="{{ asset('images/car_images/' ~ car.image) }}" alt="{{ car.brand ~ ' ' ~ car.model }}">
+                <p><strong>{{ car.brand ~ ' ' ~ car.model }}</strong></p>
+                <p><strong>Color:</strong> {{ car.color }}</p>
+                <p><strong>Kilometers:</strong> {{ car.km }} km</p>
+                <p><strong>Price:</strong> ${{ car.price }}</p>
+                <div class="rent-button">
+                    <button id="deleteCarButton{{ car.id }}">Delete Listing</button>
+                    <button id="markUnavailableButton{{ car.id }}">Mark Unavailable</button>
+                    <button id="updateListingButton{{ car.id }}">Update Listing</button>
+                    <button id="confirmButton{{ car.id }}">Confirm</button>
+                    
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
-

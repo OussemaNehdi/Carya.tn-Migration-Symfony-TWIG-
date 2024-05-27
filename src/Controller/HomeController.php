@@ -139,7 +139,7 @@ class HomeController extends AbstractController
         }
 
         $userCars = $CarsRepository->findCarsByUserId($Cars, $user->getId());
-
+        
         return $this->render('home/myCars.html.twig', [
             'bodyclass' => 'rent-body',
             'cars' => $userCars,
@@ -149,6 +149,7 @@ class HomeController extends AbstractController
             'max_km'=>$CarsRepository->getMaxValue('km'),
             'max_price'=>$CarsRepository->getMaxValue('price'),
             'filter_data' => $filters,
+            
                 ]);
     }
 

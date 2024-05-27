@@ -172,12 +172,32 @@ public function findByFilters(array $filters): array
         return $qb->getResult();
     }
     ///////////////////////////////////////////////////////////// for myCars
-    public function findCarsByUserId(array $cars, int $userId)
+    /**
+     * Find active renting cars by user
+     *
+     * @param Users $user
+     * @param int $userId
+     * @return Cars[]
+     */
+    public function findCarsByUserId(array $cars, int $userId) : array
     {
         // Filter the given array of cars by user ID
-        return array_filter($cars, function ($car) use ($userId) {
-            return $car->getOwnerId() === $userId;
-        });
+        
+        $filteredCars = [];
+        foreach ($cars as $car) {
+            
+
+
+
+            if ($car->getOwnerId()->getId() === $userId) {
+                $filteredCars[] = $car;
+            }
+        }
+        
+        return $filteredCars;
+
+        
+    
     }
 
 }
