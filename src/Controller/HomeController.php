@@ -30,6 +30,9 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use TCPDF;
 use Symfony\Component\HttpFoundation\RedirectResponse; 
 use App\Form\CarType;
+use App\Form\ForgotPasswordType;
+use App\Form\ResetPasswordType;
+
 
 class HomeController extends AbstractController
 {
@@ -262,10 +265,85 @@ class HomeController extends AbstractController
     }
     
     #[Route('/forgot-password', name: 'forgot_password')]
-    public function forgotPassword(): Response
+    public function forgotPassword(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
+        $form = $this->createForm(ForgotPasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $email = $data['email'];
+
+            // Check if the email belongs to a user
+            $user = $entityManager->getRepository(Users::class)->findOneBy(['email' => $email]);
+            if ($user) {
+                // Generate a password reset token
+                $token = bin2hex(random_bytes(32));
+                $user->setResetToken($token);
+                $user->setResetTokenExpiration(new \DateTime('+1 hour'));
+                $entityManager->flush();
+
+                // Send password reset email
+                $email = (new Email())
+                    ->subject('Reset your password')
+                    ->from('support@demomailtrap.com')
+                    ->to($user->getEmail())
+                    ->html($this->renderView('emails/resetPassword.html.twig', [
+                        'token' => $token,
+                        'first_name' => $user->getFirstName(),
+                    ]));
+
+                $mailer->send($email);
+
+                $this->addFlash('success', 'Password reset link sent successfully.');
+            } else {
+                $this->addFlash('error', 'Email not found.');
+            }
+
+            return $this->redirectToRoute('login');
+        }
+
         return $this->render('home/forgotPassword.html.twig', [
-            'bodyclass' => 'forgotPasswordBody',
+            'bodyclass' => 'forgot-body',
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/reset-password/{token}', name: 'reset_password')]
+    public function resetPassword(Request $request, string $token, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $user = $entityManager->getRepository(Users::class)->findOneBy(['resetToken' => $token]);
+
+        if (!$user || $user->isResetTokenExpired()) {
+            $this->addFlash('error', 'Invalid or expired password reset token.');
+            return $this->redirectToRoute('login');
+        }
+
+        $form = $this->createForm(ResetPasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $newPassword = $data['password'];
+
+            // Encode the new password and set it on the user entity
+            $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+            $user->setPassword($hashedPassword);
+
+            // Clear the reset token and expiration
+            $user->setResetToken(null);
+            $user->setResetTokenExpiration(null);
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Password has been successfully reset.');
+            return $this->redirectToRoute('login');
+        }
+
+        return $this->render('home/resetPassword.html.twig', [
+            'form' => $form->createView(),
+            'bodyclass' => 'forgot-body',
         ]);
     }
 
