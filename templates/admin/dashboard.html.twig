@@ -36,7 +36,7 @@
                     <td>{{ user.firstName }}</td>
                     <td>{{ user.lastName }}</td>
                     <td>{{ user.email }}</td>
-                    <td>{{ user.creationDate ? user.creationDate|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ user.creationDate ? user.creationDate|date('Y-m-d') : '' }}</td>
                     <td>{% if user.roles[0] == "ROLE_ADMIN" %} Admin {% else %} User {% endif %}</td>
                     <td>
                         {% if 'ROLE_BANNED' in user.roles %}
