@@ -87,13 +87,14 @@
                         <a href="{{ path('delete_car', {'id': car.id}) }}" class="delete-link">Delete</a>
                     </td>
                     <td>
-                        <button id="UpdateCarBtn{{ car.id }}">Update Listing</button>
+                        <button class="updateCarBtn" data-car-id="{{ car.id }}">Update Listing</button>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 </section>
+
 
 <style>
 /* Modal Container */
@@ -178,6 +179,49 @@
             modal.style.display = 'none';
         }
     }
+
+    $(document).ready(function() {
+    // Click event handler for updateCarBtn
+    $('.updateCarBtn').click(function(e) {
+        e.preventDefault(); // Prevent default link behavior
+        
+        var carId = $(this).data('car-id');
+        
+        // AJAX call to fetch the update form
+        $.ajax({
+            url: '/update_car/' + carId,
+            type: 'GET',
+            success: function(response) {
+                // Show the response in a modal popup
+                showModal(response);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+    
+    // Function to show modal
+    function showModal(content) {
+        // Create a modal element
+        var modal = $('<div class="modal">').appendTo('body');
+        
+        // Add content to the modal
+        modal.html(content);
+        
+        // Display the modal
+        modal.show();
+        
+        // Add close button functionality
+        modal.on('click', function(e) {
+            if ($(e.target).hasClass('modal')) {
+                modal.hide();
+                modal.remove();
+            }
+        });
+    }
+});
+
 </script>
 
 
