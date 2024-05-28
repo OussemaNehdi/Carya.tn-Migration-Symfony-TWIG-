@@ -2,6 +2,35 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+<div class="main-container">
+    <div class="filter-menu" id="filterMenuContainer">
+        {% include '/home/filter.html.twig' %}
+    </div>
+    <div class="cars-list content-container">
+        <div class="container">
+            <div class="titles">
+                <h2>Available Cars</h2>
+            </div>
+            <div class="cars-container">
+                {% for car in cars %}
+                    <div class="car">
+                        <img src="{{ asset('images/car_images/' ~ car.image) }}" alt="{{ car.brand ~ ' ' ~ car.model }}">
+                        <p><strong>{{ car.brand ~ ' ' ~ car.model }}</strong></p>
+                        <p><strong>Color:</strong> {{ car.color }}</p>
+                        <p><strong>Kilometers:</strong> {{ car.km }} km</p>
+                        <p><strong>Price:</strong> ${{ car.price }}</p>
+                        <div class="rent-button">
+                                <button id="rentCarButton{{ car.id }}">Rent</button>
+                        </div>
+                    </div>
+                    <div id="popup{{ car.id }}" class="popup-rent-container">
+                        {% include '/home/rent_car_popup.html.twig' with {'car': car} %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     window.addEventListener('scroll', function() {
     var filterMenuContainer = document.getElementById('filterMenuContainer');
@@ -36,36 +65,5 @@
     });
 
 </script>
-
-<div class="main-container">
-    <div class="filter-menu" id="filterMenuContainer">
-        {% include '/home/filter.html.twig' %}
-    </div>
-    <div class="cars-list content-container">
-        <div class="container">
-            <div class="titles">
-                <h2>Available Cars</h2>
-            </div>
-            <div class="cars-container">
-                {% for car in cars %}
-                    <div class="car">
-                        <img src="{{ asset('images/car_images/' ~ car.image) }}" alt="{{ car.brand ~ ' ' ~ car.model }}">
-                        <p><strong>{{ car.brand ~ ' ' ~ car.model }}</strong></p>
-                        <p><strong>Color:</strong> {{ car.color }}</p>
-                        <p><strong>Kilometers:</strong> {{ car.km }} km</p>
-                        <p><strong>Price:</strong> ${{ car.price }}</p>
-                        <div class="rent-button">
-                                <button id="rentCarButton{{ car.id }}">Rent</button>
-                        </div>
-                    </div>
-                    <div id="popup{{ car.id }}" class="popup-rent-container">
-                        {% include '/home/rent_car_popup.html.twig' with {'car': car} %}
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>
-
 {% endblock %}
 
