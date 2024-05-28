@@ -1,11 +1,10 @@
 {# templates/admin/dashboard.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin Dashboard{% endblock %}
-
 {% block body %}
 <h1>Admin Dashboard</h1>
 
+{#
 <!-- Debugging: Display users variable -->
 {% if users is not defined %}
     <p>Error: users variable is not defined.</p>
@@ -13,6 +12,7 @@
     <p>Users variable is defined.</p>
     <p>{{ users|length }} users found.</p>
 {% endif %}
+#}
 
 <!-- User list -->
 <section>
@@ -37,7 +37,7 @@
                     <td>{{ user.lastName }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.creationDate ? user.creationDate|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ user.roles[0] }}</td>
+                    <td>{% if user.roles[0] == "ROLE_ADMIN" %} Admin {% else %} User {% endif %}</td>
                     <td>
                         {% if 'ROLE_BANNED' in user.roles %}
                             <a href="{{ path('user_unban', {'id': user.id}) }}" class="unban-link">Unban</a>
