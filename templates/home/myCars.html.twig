@@ -38,7 +38,7 @@
 
 
                     
-                    <button id="updateListingButton{{ car.id }}">Update Listing</button>
+                    <button class="updateCarBtn" data-car-id="{{ car.id }}">Update Listing</button>
                     <button id="confirmButton{{ car.id }}">Confirm</button>
                 </div>
                 
@@ -48,5 +48,92 @@
         </div>
     </div>
 </div>
+
+<div id="updateCarModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+    </div>
+</div>
+
+
+<!-- Add Car Modal -->
+<div id="addCarModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        {% include 'forms/addCar.html.twig' %}
+    </div>
+</div>
+
+<script>
+    // Get modal element
+    var modal = document.getElementById('addCarModal');
+    // Get open modal button
+    var modalBtn = document.getElementById('addCarBtn');
+    // Get close button
+    var closeBtn = document.getElementsByClassName('close')[0];
+
+    // Listen for open click
+    modalBtn.addEventListener('click', openModal);
+    // Listen for close click
+    closeBtn.addEventListener('click', closeModal);
+    // Listen for outside click
+    window.addEventListener('click', outsideClick);
+
+    // Function to open modal
+    function openModal() {
+        modal.style.display = 'block';
+    }
+
+    // Function to close modal
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+
+    // Function to close modal if outside click
+    function outsideClick(e) {
+        if (e.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    $(document).ready(function() {
+    // Click event handler for updateCarBtn
+    $('.updateCarBtn').click(function(e) {
+        e.preventDefault(); // Prevent default link behavior
+        
+        var carId = $(this).data('car-id');
+        
+        // Show the update car modal
+        $('#updateCarModal').show();
+        
+        // AJAX call to fetch the update form
+        $.ajax({
+            url: '/update_car/' + carId,
+            type: 'GET',
+            success: function(response) {
+                // Inject the update form content into the modal
+                $('#updateCarModal .modal-content').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+    
+    // Close modal functionality
+    $('.close').click(function() {
+        $('.modal').hide();
+    });
+    
+    // Close modal if clicked outside of it
+    $(window).click(function(event) {
+        if ($(event.target).hasClass('modal')) {
+            $(event.target).hide();
+        }
+    });
+});
+
+</script>
+
 {% endblock %}
 
