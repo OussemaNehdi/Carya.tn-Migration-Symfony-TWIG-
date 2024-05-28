@@ -138,6 +138,9 @@ class HomeController extends AbstractController
             throw $this->createNotFoundException('User not found');
         }
 
+        $car = new Cars();
+        $form = $this->createForm(CarType::class, $car);
+
         $filters = $CarsRepository->constructFilterQuery($request);
         if (!empty($filters)) {
             $Cars = $CarsRepository->findByFilters($filters);
@@ -156,6 +159,7 @@ class HomeController extends AbstractController
             'max_km' => $CarsRepository->getMaxValue('km'),
             'max_price' => $CarsRepository->getMaxValue('price'),
             'filter_data' => $filters,
+            'form' => $form->createView()
         ]);
     }
 
@@ -229,9 +233,6 @@ class HomeController extends AbstractController
     }
 
     
-
-
-    ////
     #[Route('/command/accept', name: 'accept_command', methods: ['POST'])]
     public function acceptCommand(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -245,7 +246,7 @@ class HomeController extends AbstractController
             $this->addFlash('success', 'Command accepted successfully.');
         }
 
-        return $this->redirectToRoute('admin_dashboard'); // Assuming you have a route named 'command_list'
+        return $this->redirectToRoute('my_cars'); // Assuming you have a route named 'command_list'
     }
 
     #[Route('/command/refuse', name: 'refuse_command', methods: ['POST'])]
@@ -261,7 +262,7 @@ class HomeController extends AbstractController
             $this->addFlash('success', 'Command refused successfully.');
         }
 
-        return $this->redirectToRoute('admin_dashboard');
+        return $this->redirectToRoute('my_cars');
     }
 
     #[Route('/command/cancel', name: 'cancel_command', methods: ['POST'])]
@@ -277,7 +278,7 @@ class HomeController extends AbstractController
             $this->addFlash('success', 'Command canceled successfully.');
         }
 
-        return $this->redirectToRoute('admin_dashboard');
+        return $this->redirectToRoute('my_cars');
     }
 
     #[Route('/delete_car/{id}', name: 'delete_car')]
@@ -298,7 +299,7 @@ class HomeController extends AbstractController
         // Redirect to the car list page with a success message
         $this->addFlash('success', 'Car deleted successfully.');
 
-        return $this->redirectToRoute('admin_dashboard'); // Adjust the route name to your car list page
+        return $this->redirectToRoute('my_cars'); // Adjust the route name to your car list page
     }
 
     #[Route('/add_car', name: 'add_car')]
@@ -337,7 +338,7 @@ class HomeController extends AbstractController
             $entityManager->persist($car);
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin_dashboard'); // or any route you want to redirect to
+            return $this->redirectToRoute('my_cars'); // or any route you want to redirect to
         }
 
         return $this->render('forms/addCar.html.twig', [
@@ -357,7 +358,7 @@ class HomeController extends AbstractController
             $entityManager->flush();
 
             // Redirect to some route after successful update
-            return $this->redirectToRoute('admin_dashboard');
+            return $this->redirectToRoute('my_cars');
         }
 
         return $this->render('forms/updateCar.html.twig', [

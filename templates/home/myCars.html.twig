@@ -48,62 +48,49 @@
         </div>
     </div>
 </div>
-<div class="overlay" id="overlay"></div>
+
+
+<!-- Add Car Modal -->
+<div id="addCarModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        {% include 'forms/addCar.html.twig' %}
+    </div>
+</div>
 
 <script>
-    window.addEventListener('scroll', function() {
-        var filterMenuContainer = document.getElementById('filterMenuContainer');
-        var contentContainer = document.querySelector('.content-container');
-        var scrollY = window.scrollY || window.pageYOffset;
+    // Get modal element
+    var modal = document.getElementById('addCarModal');
+    // Get open modal button
+    var modalBtn = document.getElementById('addCarBtn');
+    // Get close button
+    var closeBtn = document.getElementsByClassName('close')[0];
 
-        if (scrollY > contentContainer.offsetTop) {
-            filterMenuContainer.style.top = (scrollY - contentContainer.offsetTop) + 'px';
-        } else {
-            filterMenuContainer.style.top = '0';
+    // Listen for open click
+    modalBtn.addEventListener('click', openModal);
+    // Listen for close click
+    closeBtn.addEventListener('click', closeModal);
+    // Listen for outside click
+    window.addEventListener('click', outsideClick);
+
+    // Function to open modal
+    function openModal() {
+        modal.style.display = 'block';
+    }
+
+    // Function to close modal
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+
+    // Function to close modal if outside click
+    function outsideClick(e) {
+        if (e.target == modal) {
+            modal.style.display = 'none';
         }
-    });
-
-    // Changed by AgressivePug
-    document.addEventListener("DOMContentLoaded", function() {
-        {% for car in cars %}
-            // Add event listener for "Update Listing" button
-            document.getElementById("updateListingButton{{ car.id }}").addEventListener("click", function() {
-                document.getElementById("popup{{ car.id }}").style.display = "block";
-                document.getElementById("overlay").style.display = "block";
-            });
-
-            // Add event listener for "Confirm Commands" button
-            document.getElementById("ConfirmCommandsBtn{{ car.id }}").addEventListener("click", function() {
-                document.getElementById("commandsPopup{{ car.id }}").style.display = "block";
-                document.getElementById("overlay").style.display = "block";
-            });
-        {% endfor %}
-
-        // Add event listener to close popups and overlay when clicking outside popups
-        document.getElementById("overlay").addEventListener("click", function() {
-            {% for car in cars %}
-                document.getElementById("popup{{ car.id }}").style.display = "none";
-                document.getElementById("commandsPopup{{ car.id }}").style.display = "none";
-            {% endfor %}
-            document.getElementById("addCarPopup").style.display = "none";
-            document.getElementById("overlay").style.display = "none";
-        });
-
-        document.getElementById("addCarBtn").addEventListener("click", function() {
-            document.getElementById("addCarPopup").style.display = "block";
-            document.getElementById("overlay").style.display = "block";
-        });
-    });
-
-    function displayFileNameUpdate(input, id) {
-        var fileName = input.files[0].name;
-        var fileNameElement = document.getElementById('update-name' + id);
-        if (fileName.length > 20) {
-            fileName = fileName.substring(0, 20) + "..."; // Truncate if over 20 characters
-        }
-        fileNameElement.textContent = fileName;
     }
 </script>
+
 {% endblock %}
 
 
