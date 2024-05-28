@@ -51,7 +51,7 @@
     </div>
 </div>
 
-<div id="updateCarModal" class="modal">
+<div id="updateCarModal" class="modal update">
     <div class="modal-content">
         <span class="close">&times;</span>
     </div>
@@ -59,7 +59,7 @@
 
 
 <!-- Add Car Modal -->
-<div id="addCarModal" class="modal">
+<div id="addCarModal" class="modal rent">
     <div class="modal-content">
         <span class="close">&times;</span>
         {% include 'forms/addCar.html.twig' %}
@@ -98,7 +98,7 @@
         }
     }
 
-    $(document).ready(function() {
+   $(document).ready(function() {
     // Click event handler for updateCarBtn
     $('.updateCarBtn').click(function(e) {
         e.preventDefault(); // Prevent default link behavior
