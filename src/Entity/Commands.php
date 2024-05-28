@@ -126,4 +126,14 @@ class Commands
 
         return $this;
     }
+
+    public function getTotalPrice(): ?float
+    {
+        if ($this->car_id && $this->rental_period) {
+            $carPrice = $this->car_id->getPrice();
+            $totalPrice = $carPrice * $this->rental_period;
+            return $totalPrice;
+        }
+        return null;
+    }
 }

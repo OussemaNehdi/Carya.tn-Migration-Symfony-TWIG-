@@ -95,6 +95,12 @@
     </table>
 </section>
 
+<div id="updateCarModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+    </div>
+</div>
+
 
 <!-- Add Car Modal -->
 <div id="addCarModal" class="modal">
@@ -136,20 +142,23 @@
         }
     }
 
-    $(document).ready(function() {
+   $(document).ready(function() {
     // Click event handler for updateCarBtn
     $('.updateCarBtn').click(function(e) {
         e.preventDefault(); // Prevent default link behavior
         
         var carId = $(this).data('car-id');
         
+        // Show the update car modal
+        $('#updateCarModal').show();
+        
         // AJAX call to fetch the update form
         $.ajax({
             url: '/update_car/' + carId,
             type: 'GET',
             success: function(response) {
-                // Show the response in a modal popup
-                showModal(response);
+                // Inject the update form content into the modal
+                $('#updateCarModal .modal-content').html(response);
             },
             error: function(xhr, status, error) {
                 console.error(error);
@@ -157,25 +166,17 @@
         });
     });
     
-    // Function to show modal
-    function showModal(content) {
-        // Create a modal element
-        var modal = $('<div class="modal">').appendTo('body');
-        
-        // Add content to the modal
-        modal.html(content);
-        
-        // Display the modal
-        modal.show();
-        
-        // Add close button functionality
-        modal.on('click', function(e) {
-            if ($(e.target).hasClass('modal')) {
-                modal.hide();
-                modal.remove();
-            }
-        });
-    }
+    // Close modal functionality
+    $('.close').click(function() {
+        $('.modal').hide();
+    });
+    
+    // Close modal if clicked outside of it
+    $(window).click(function(event) {
+        if ($(event.target).hasClass('modal')) {
+            $(event.target).hide();
+        }
+    });
 });
 
 </script>
@@ -207,7 +208,7 @@
                     <td class="user-info" data-id="{{ command.userId.id }}">{{ command.userId.id }}</td>
                     <td>{{ command.startDate ? command.startDate|date('Y-m-d') : '' }}</td>
                     <td>{{ command.endDate ? command.endDate|date('Y-m-d') : '' }}</td>
-                    <td></td>
+                    <td>{{ command.getTotalPrice }}</td>
                     <td>
                         {% if command.confirmed is null %}
                             Unreviewed
