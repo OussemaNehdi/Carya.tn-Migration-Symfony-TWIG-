@@ -1,20 +1,14 @@
-
-
-
-
-
-    <h2>Rent Car Form</h2>
-   
+    <div class="popup-titles">
+        <h2>Rent Car Form</h2>
+    </div>
     {% if carDetails %}
         <div class="car-details">
             <h3>Car Details:</h3>
             <p>Brand: {{ carDetails.brand }}</p>
             <p>Model: {{ carDetails.model }}</p>
             <p>Color: {{ carDetails.color }}</p>
-            <p>Price per Day: ${{ carDetails.price }}</p>
+            <p>Price: ${{ carDetails.price }}</p>
         </div>
-
-
 
         <h3>Rent Car:</h3>
         {{ form_start(form, { 'action': path('rent_car', { 'id': carDetails.id }), 'method': 'POST' }) }}
@@ -38,7 +32,6 @@
                 <input type="password" id="password" name="password" required>
             </div>
             <div class="submit-container">
-                
                 <input type="submit" class="submit-popup-button" value="Rent">
             </div>
             {{ form_end(form) }}

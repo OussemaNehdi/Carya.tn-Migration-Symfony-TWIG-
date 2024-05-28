@@ -96,7 +96,7 @@ ul{
 }
 
 /* ================== Popups ================== */
-/* ------------------ Rent car Modal ------------------ */
+/* ------------------ Add car Modal ------------------ */
 /* Modal Container */
 .add {
     display: none; /* Hidden by default */
@@ -236,7 +236,7 @@ ul{
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-/* ------------------ End of Rent car Modal Popup ------------------ */
+/* ------------------ End of Add car Modal Popup ------------------ */
 /* ------------------ Update car Modal Popup ------------------ */
 .update {
     all: unset;
@@ -445,6 +445,110 @@ ul{
     transition: all 0.3s ease-in-out;
 }
 /* ------------------ End of command popup ------------------ */
+/* ------------------ Rent Car Popups ------------------ */
+.rent {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.rent .modal-content {
+    background-color: rgba(254, 254, 254, 0.87);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(136, 136, 136, 0.5);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 30%;
+    max-width: 400px;
+    top: -10%;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+.rent .modal-content:hover{
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(63, 63, 63, 0.5);
+}
+.rent .modal-content .popup-titles{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.rent .modal-content .popup-titles h2 {
+    color: black; 
+    font-size: 30px;
+    font-weight: 600;
+}
+.rent .modal-content .car-details{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    margin-bottom: 10px;
+
+}
+.rent .modal-content .car-details p {
+    margin-bottom: 3px;
+}
+.rent .modal-content .sub-container{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.rent .modal-content label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 400;
+}
+
+.rent .modal-content input[type="date"],
+.rent .modal-content input[type="password"]{
+    all: unset;
+
+    background: white;
+    width: 70%;
+    height: 30px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+.rent .modal-content input:focus{
+    box-shadow: none;
+    border-color: #c89568;
+}
+.rent .modal-content .label-container{
+    display: flex;
+    justify-content: center;
+}
+.rent .modal-content .label-container label{
+    margin-top: 2px;
+}
+
+.rent .modal-content .submit-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.rent .modal-content .submit-popup-button {
+    background-color: #8f7641e0;
+    color: #fff;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.rent .modal-content .submit-popup-button:hover {
+    background-color: #8f7641;
+}
+/* ------------------ End of Rent Car Popups ------------------ */
+
+
 
 
 /* ================== Pages / Routes ================== */
