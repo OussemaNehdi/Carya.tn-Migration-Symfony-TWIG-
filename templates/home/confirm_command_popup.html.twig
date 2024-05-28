@@ -7,8 +7,10 @@
     {% endif %}
     {% for command in commands %}
         <div class="sub-container">
-            {% set status = "Unreviewed" %}
-            {% if command.confirmed is defined %}
+            
+            {% if command.confirmed is null %}
+                {% set status = "Unreviewed" %}
+            {% else %}
                 {% if command.confirmed %}
                     {% set status = "Accepted" %}
                 {% else %}
@@ -34,12 +36,12 @@
             </div>
             {% if status == "Unreviewed" %}
                 <div class="action-buttons">
-                    <form method="post" action="#">
-                        <input type="hidden" name="command_id" value="{{ command.command_id }}">
+                    <form action="{{ path('accept_command') }}" method="POST">
+                        <input type="hidden" name="command_id" value="{{ command.id }}">
                         <button type="submit" name="accept" class="button-accept">Accept</button>
                     </form>
-                    <form method="post" action="#">
-                        <input type="hidden" name="command_id" value="{{ command.command_id }}">
+                    <form action="{{ path('refuse_command') }}" method="POST">
+                        <input type="hidden" name="command_id" value="{{ command.id }}">
                         <button type="submit" name="refuse" class="button-deny">Refuse</button>
                     </form>
                 </div>
