@@ -257,7 +257,8 @@ class UserController extends AbstractController
     #[Route('/profile', name: 'profile')]
     public function Profile(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
+        $user= $this->getUser();
+        $userId=$user->getId();
         $form = $this->createForm(ProfileType::class, $user);
 
         $form->handleRequest($request);
@@ -271,7 +272,9 @@ class UserController extends AbstractController
         }
 
         // Fetch active renting cars logic goes here
-        $activeRentingCars = $entityManager->getRepository(Cars::class)->findActiveRentingCarsByUser($user);
+        $activeRentingCars = $entityManager->getRepository(Commands::class)->findActiveRentingCarsByUser($userId);
+        
+      
 
         return $this->render('home/profile.html.twig', [
             'profileForm' => $form->createView(),
