@@ -114,15 +114,15 @@ ul{
 }
 
 /* Close Button */
-.close {
+.modal .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
+.modal .close:hover,
+.modal .close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
@@ -220,7 +220,6 @@ ul{
 }
 
 /* ------------------ End of Rent car Modal ------------------ */
-
 
 
 /* ================== Pages / Routes ================== */
@@ -901,7 +900,7 @@ ul{
 /* ------------------ end of Profile Page ------------------*/
 
 /* ------------------ Rent-a-car Page ------------------*/
-.rent-body .modal-content {
+.rent-body .main-container {
     display: flex;
     margin: 0;
     padding: 0;
@@ -1085,7 +1084,7 @@ ul{
 /* ------------------ End of rent_car.php ------------------*/
 
 /* ------------------ My Cars Page ------------------*/
-.listing-body .modal-content {
+.listing-body .main-container {
     display: flex;
     margin: 0;
     padding: 0;
