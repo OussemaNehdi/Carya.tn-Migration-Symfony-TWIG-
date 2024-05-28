@@ -116,7 +116,7 @@ class HomeController extends AbstractController
 
         ]);
     }
-
+    ///////
     #[Route('/myCars', name: 'my_cars')]
     public function myCars(CarsRepository $CarsRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -151,7 +151,30 @@ class HomeController extends AbstractController
         ]);
     }
 
+    
+    #[Route('/myCarsDeleteCar/{id}', name: 'my_cars_delete_car')]
+    public function myCarsDeleteCar($id, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        
+        $car = $entityManager->getRepository(Cars::class)->find($id);
 
+        if (!$car) {
+            throw $this->createNotFoundException('The car does not exist');
+        }
+
+
+        $entityManager->remove($car);
+        $entityManager->flush();
+
+        
+        $this->addFlash('success', 'Car deleted successfully.');
+
+        return $this->redirectToRoute('my_cars'); 
+    }
+    
+
+
+    ////
     #[Route('/command/accept', name: 'accept_command', methods: ['POST'])]
     public function acceptCommand(Request $request, EntityManagerInterface $entityManager): Response
     {

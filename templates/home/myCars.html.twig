@@ -27,7 +27,8 @@
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <button id="deleteCarButton{{ car.id }}">Delete Listing</button>
+                    <a href="{{ path('my_cars_delete_car', {'id': car.id}) }}" class="delete-link">Delete</a>
+                    
                     <button id="markUnavailableButton{{ car.id }}">Mark Unavailable</button>
                     <button id="updateListingButton{{ car.id }}">Update Listing</button>
                     <button id="confirmButton{{ car.id }}">Confirm</button>
