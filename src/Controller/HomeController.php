@@ -224,6 +224,13 @@ class HomeController extends AbstractController
         
         $car = $entityManager->getRepository(Cars::class)->find($id);
 
+        // Check if the car has commands
+        $commands = $entityManager->getRepository(Commands::class)->findBy(['car_id' => $car]);
+        if ($commands) {
+            $this->addFlash('error', 'Car cannot be deleted because it has commands.');
+            return $this->redirectToRoute('my_cars');
+        }
+
         if (!$car) {
             throw $this->createNotFoundException('ERROR : no car found');
         }
