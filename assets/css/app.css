@@ -482,7 +482,12 @@ ul{
 }
 .rent .modal-content .popup-titles h2 {
     color: black; 
-    font-size: 30px;
+    font-size: 35px;
+    font-weight: 700;
+}
+.rent .modal-content .car-details h3 {
+    color: black; 
+    font-size: 25px;
     font-weight: 600;
 }
 .rent .modal-content .car-details{
@@ -491,6 +496,9 @@ ul{
     flex-direction: column;
     margin-bottom: 10px;
 
+}
+.rent .modal-content .car-details .mini-titles{
+    font-weight: 600;
 }
 .rent .modal-content .car-details p {
     margin-bottom: 3px;
