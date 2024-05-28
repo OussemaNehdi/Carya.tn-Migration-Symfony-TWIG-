@@ -36,6 +36,17 @@ ul{
     list-style-type: none;
 }
 
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
 /* ================== Notification ================== */
 .notification {
     position: fixed;
@@ -90,7 +101,7 @@ ul{
 .rent {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 1000; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -117,7 +128,7 @@ ul{
     border: 1px solid rgba(63, 63, 63, 0.5);
 }
 /* Close Button */
-.rent .close {
+.close {
     position: absolute;
     top: 12px;
     right: 20px;
@@ -126,8 +137,8 @@ ul{
     cursor: pointer;
 }
 
-.rent .close:hover,
-.rent .close:focus {
+.close:hover,
+.close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
@@ -232,7 +243,7 @@ ul{
 
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 1000; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -323,10 +334,117 @@ ul{
     align-items: center;
     margin-top: 10px;
 }
-
-
 /* ------------------ End of Update car Modal Popup ------------------ */
 
+/*------------------- command popup ------------------*/
+.command-popup{
+    all: unset;
+
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.822);
+    backdrop-filter: blur(8px);
+    border-radius: 10px;
+    padding: 0 15px 0 15px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+
+    width: 23%;
+}
+.command-popup:hover {
+    border: 3px solid #494646;
+    transition: border-color 0.2s ease-in-out;
+}
+.command-popup .main-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.command-popup .main-container .titles{
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.command-popup .main-container .titles h2{
+    color: black; 
+    font-size: 30px;
+    font-weight: 600;
+}
+.command-popup .main-container .sub-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+}
+.command-popup .main-container .sub-container:hover{
+    border: 2px solid #807d7d;
+
+}
+.command-popup .main-container .details{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.command-popup .main-container .mini-titles{
+    display: flex;
+    flex-direction: column;
+}
+.command-popup .main-container .mini-details{
+    display: flex;
+    flex-direction: column;
+}
+.command-popup .main-container .details p{
+    all: unset;
+    margin-bottom: 7px;
+}
+.command-popup .main-container .details span{
+    font-weight: 600;
+    margin-right: 45px;
+    margin-bottom: 7px;
+}
+.command-popup .main-container .action-buttons{
+    display: flex;
+    justify-content: space-between;
+}
+.command-popup .main-container .action-buttons .button-accept{
+    background-color: #44c95ae0;
+    color: #fff;
+    padding: 6px 14px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.command-popup .main-container .action-buttons .button-accept:hover{
+    background-color: #3dbd52;
+    border: 2px solid #72e485e0;
+    transition: all 0.3s ease-in-out;
+}
+.command-popup .main-container .action-buttons .button-deny{
+    background-color: #c12828e0;
+    color: #fff;
+    padding: 6px 14px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.command-popup .main-container .action-buttons .button-deny:hover{
+    background-color: #a82020;
+    border: 2px solid #e94545e0;
+    transition: all 0.3s ease-in-out;
+}
+/* ------------------ End of command popup ------------------ */
 
 
 /* ================== Pages / Routes ================== */

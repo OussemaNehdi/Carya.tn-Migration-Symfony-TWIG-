@@ -11,9 +11,9 @@
                 {% set status = "Unreviewed" %}
                 {% if command.confirmed is defined %}
                     {% if command.confirmed %}
-                        {% set status = "accepted" %}
+                        {% set status = "Accepted" %}
                     {% else %}
-                        {% set status = "refused" %}
+                        {% set status = "Refused" %}
                     {% endif %}
                 {% endif %}
                 <div class="details">
@@ -33,13 +33,13 @@
                         <p>{{ status }}</p>
                     </div>
                 </div>
-                {% if command.confirmed is not defined %}
+                {% if status == "Unreviewed" %}
                     <div class="action-buttons">
-                        <form method="post" action="http://localhost/Mini-PHP-Project/carya.tn/src/controllers/accept_command.php">
+                        <form method="post" action="#">
                             <input type="hidden" name="command_id" value="{{ command.command_id }}">
                             <button type="submit" name="accept" class="button-accept">Accept</button>
                         </form>
-                        <form method="post" action="http://localhost/Mini-PHP-Project/carya.tn/src/controllers/refuse_command.php">
+                        <form method="post" action="#">
                             <input type="hidden" name="command_id" value="{{ command.command_id }}">
                             <button type="submit" name="refuse" class="button-deny">Refuse</button>
                         </form>
