@@ -1,5 +1,3 @@
-{% extends 'base.html.twig' %}
-{% block body %}
 <div id="commandsPopup{{ car.id }}" class="command-popup">
     <div class="main-container">
         <div class="titles">
@@ -28,11 +26,10 @@
                         <span>Status:</span> 
                     </div>
                     <div class="mini-details">
-            
-                        <p>{{ command.rental_date }}</p>
-                        <p>{{ command.start_date }}</p>
-                        <p>{{ command.end_date }}</p>
-                        <p>{{ command.rental_period }} days</p>
+                        <p>{{ command.rentalDate|date('Y-m-d') }}</p>
+                        <p>{{ command.startDate|date('Y-m-d') }}</p>
+                        <p>{{ command.endDate|date('Y-m-d') }}</p>
+                        <p>{{ command.rentalPeriod }} days</p>
                         <p>{{ status }}</p>
                     </div>
                 </div>
@@ -52,4 +49,3 @@
         {% endfor %}
     </div>
 </div>
-{% endblock %}

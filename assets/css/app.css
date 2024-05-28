@@ -175,7 +175,9 @@ ul{
     margin-top: 10px;
     margin-bottom: 10px;
 }
-.rent b {
+.rent .modal-content button {
+    all: unset;
+
     background-color: #b87926e0;
     color: #fff;
     padding: 6px 14px;
@@ -183,7 +185,7 @@ ul{
     border-radius: 5px;
     cursor: pointer;
 }
-.rent b:hover {
+.rent .modal-content button:hover {
     transition: all 0.3s ease-in-out;
     background-color: #db9b46e0;
 }
@@ -301,7 +303,9 @@ ul{
     font-family: FontAwesome; /* Font Awesome for the icon */
     margin-right: 5px; /* Adjust margin as needed */
 }
-.update .submit-popup-button {
+.update .modal-content button {
+    all: unset;
+
     background-color: #b87926e0;
     color: #fff;
     padding: 6px 14px;
@@ -309,7 +313,7 @@ ul{
     border-radius: 5px;
     cursor: pointer;
 }
-.update .submit-popup-button:hover {
+.update .modal-content button:hover {
     transition: all 0.3s ease-in-out;
     background-color: #db9b46e0;
 }

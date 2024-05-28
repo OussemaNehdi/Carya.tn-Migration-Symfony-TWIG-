@@ -11,7 +11,6 @@
                 <h2>My Car Listings</h2>
                 <button id="addCarBtn">Add Car</button>
             </div>
-            {{ dump(cars) }}
             
             {% for car in cars %}
             <div class="car-listing-container">
@@ -28,16 +27,13 @@
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <a href="{{ path('my_cars_delete_car', {'id': car.id}) }}" class="delete-link">Delete</a>
+                    <a href="{{ path('my_cars_delete_car', {'id': car.id}) }}" class="delete-link"><button>Delete</button></a>
                     {% if car.isAvailable %}
-                        <a href="{{ path('my_cars_mark_car_unavailable', {'id': car.id}) }}" class="edit">Mark Unavailable</a>
+                        <a href="{{ path('my_cars_mark_car_unavailable', {'id': car.id}) }}" class="edit"><button>Mark Unavailable</button></a>
                     {% else %}
-                        <a href="{{ path('my_cars_mark_car_available', {'id': car.id}) }}" class="edit">Mark Available</a>
+                        <a href="{{ path('my_cars_mark_car_available', {'id': car.id}) }}" class="edit"><button>Mark Available</button></a>
                     {% endif %}
 
-
-
-                    
                     <button class="updateCarBtn" data-car-id="{{ car.id }}">Update Listing</button>
                     <button id="confirmButton{{ car.id }}">Confirm</button>
                 </div>
@@ -45,17 +41,15 @@
             </div>
             {% endfor %}
             
+            {% for car in cars %}
+                {% set commands = commands_associative[car.id] %}
+
+                {% include 'home/confirm_command_popup.html.twig' %}
+
+            {% endfor %}
         </div>
     </div>
 </div>
-
-{% for car in cars %}
-{% set commands = commands_associative[car.id] %}
-
-{% include 'home/confirm_command_popup.html.twig' %}
-
-
-{% endfor %}
 
 
 <div id="updateCarModal" class="modal update">
