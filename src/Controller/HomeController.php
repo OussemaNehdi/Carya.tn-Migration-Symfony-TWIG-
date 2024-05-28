@@ -121,34 +121,37 @@ class HomeController extends AbstractController
     }
 
     #[Route('/myCars', name: 'my_cars')]
-    public function myCars(CarsRepository $CarsRepository,Request $request , EntityManagerInterface $entityManager): Response
+    public function myCars(CarsRepository $CarsRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        // Check if user is authenticated
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('login');
+        }
+
         $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier()); //current user?
         if (!$user) {
-            
             throw $this->createNotFoundException('User not found');
         }
-       
-        $filters = $CarsRepository->constructFilterQuery($request);       
+
+        $filters = $CarsRepository->constructFilterQuery($request);
         if (!empty($filters)) {
             $Cars = $CarsRepository->findByFilters($filters);
         } else {
-            $Cars=$CarsRepository->getAllCars();
+            $Cars = $CarsRepository->getAllCars();
         }
 
         $userCars = $CarsRepository->findCarsByUserId($Cars, $user->getId());
-        
+
         return $this->render('home/myCars.html.twig', [
             'bodyclass' => 'listing-body',
             'cars' => $userCars,
-            'brands'=>$CarsRepository-> getDistinctValues('brand'),
-            'models'=>$CarsRepository->getDistinctValues( 'model'),
-            'colors'=>$CarsRepository->getDistinctValues( 'color'),
-            'max_km'=>$CarsRepository->getMaxValue('km'),
-            'max_price'=>$CarsRepository->getMaxValue('price'),
+            'brands' => $CarsRepository->getDistinctValues('brand'),
+            'models' => $CarsRepository->getDistinctValues('model'),
+            'colors' => $CarsRepository->getDistinctValues('color'),
+            'max_km' => $CarsRepository->getMaxValue('km'),
+            'max_price' => $CarsRepository->getMaxValue('price'),
             'filter_data' => $filters,
-            
-                ]);
+        ]);
     }
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
@@ -170,7 +173,7 @@ class HomeController extends AbstractController
             'users' => $users,
             'cars' => $cars,
             'commands' => $commands,
-            'bodyclass' => 'dashboardBody',
+            'bodyclass' => 'admin-dashboard',
             'form' => $form->createView()
         ]);
     }
