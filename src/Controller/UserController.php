@@ -7,7 +7,6 @@ use App\Entity\Cars;
 use App\Entity\Commands;
 use App\Form\LoginType;
 use App\Form\SignupType;
-use App\Form\ContactType;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -88,6 +87,10 @@ class UserController extends AbstractController
             $user = $entityManager->getRepository(Users::class)->findOneBy(['email' => $email]);
             
             if ($user && $passwordHasher->isPasswordValid($user, $password)) {
+                if ($user->isBanned()) {
+                    $this->addFlash('error', 'Your account has been banned.');
+                    return $this->redirectToRoute('login');
+                }
                 $session->set('user_first_name', $user->getFirstName());
                 $session->set('user_id', $user->getId());
 

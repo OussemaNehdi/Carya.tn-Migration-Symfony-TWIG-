@@ -91,16 +91,33 @@ class HomeController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
+    #[Route('/rentCar/{id}', name: 'rent_car')]
+    public function formRentCar(Request $request , EntityManagerInterface $entityManager){
+        $id=$request->get('id');    
+        $command = new Commands();
+        $form = $this->createForm(UpdateCarType::class, $command);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $command->setCarId($id);
+            $command->setUserId($this->getUser()->getId());
+            $command->setConfirmed(0);
+            $entityManager->persist($command);
+            $entityManager->flush();
+            $this->addFlash('success', 'Car rented successfully.');
+            return $this->redirectToRoute('rent_cars');
+        }
+        return $this->render('forms/rentCar.html.twig', [
+            'form' => $form->createView(),
+            'carDetails'=>$entityManager->getRepository(Cars::class)->find($id)
+        ]);
+    }
   
     #[Route('/rentCars', name: 'rent_cars')]
     public function rentCars(CarsRepository $CarsRepository,Request $request): Response
     {
 
-       
-        $filters = $CarsRepository->constructFilterQuery($request);
-        
 
+        $filters = $CarsRepository->constructFilterQuery($request);       
         if (!empty($filters)) {
             $Cars = $CarsRepository->findByFilters($filters);
         } else {
@@ -338,6 +355,8 @@ class HomeController extends AbstractController
             $entityManager->persist($car);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Car added successfully ');
+
             return $this->redirectToRoute('my_cars'); // or any route you want to redirect to
         }
 
@@ -360,6 +379,8 @@ class HomeController extends AbstractController
             // Redirect to some route after successful update
             return $this->redirectToRoute('my_cars');
         }
+
+        $this->addFlash('success', 'car updated successfully');
 
         return $this->render('forms/updateCar.html.twig', [
             'form' => $form->createView(),

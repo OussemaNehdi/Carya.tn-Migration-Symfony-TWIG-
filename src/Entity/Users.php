@@ -239,4 +239,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->roles = ['ROLE_USER'];
     }
+
+    public function isBanned(): bool
+    {
+        return in_array('ROLE_BANNED', $this->roles);
+    }
 }
