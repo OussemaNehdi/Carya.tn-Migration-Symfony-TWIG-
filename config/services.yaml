@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     profile_image_directory: '%kernel.project_dir%/assets/images/user_images'
+    cars_images_directory: '%kernel.project_dir%/assets/images/car_images'
 services:
     # default configuration for services in *this* file
     _defaults:

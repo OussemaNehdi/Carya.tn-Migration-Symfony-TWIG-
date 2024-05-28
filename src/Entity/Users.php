@@ -50,6 +50,12 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $profile_image = null;
 
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $resetToken = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $resetTokenExpiration = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -195,6 +201,33 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         $this->profile_image = $profile_image;
 
         return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
+        return $this;
+    }
+
+    public function getResetTokenExpiration(): ?\DateTimeInterface
+    {
+        return $this->resetTokenExpiration;
+    }
+
+    public function setResetTokenExpiration(?\DateTimeInterface $resetTokenExpiration): self
+    {
+        $this->resetTokenExpiration = $resetTokenExpiration;
+        return $this;
+    }
+
+    public function isResetTokenExpired(): bool
+    {
+        return $this->resetTokenExpiration < new \DateTime();
     }
 
     public function banUser(): void
