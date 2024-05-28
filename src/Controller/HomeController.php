@@ -350,7 +350,7 @@ class HomeController extends AbstractController
             }
         }
         
-        
+
 
         if (!$allRefused) {
             $this->addFlash('error', 'Car cannot be deleted because it has pending commands.');
@@ -423,6 +423,14 @@ class HomeController extends AbstractController
     {
         $id = $request->get('id');
         $car = $entityManager->getRepository(Cars::class)->find($id);
+
+        // check if user is owner of the car
+        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier());
+        if ($car->getOwnerId()->getId() !== $user->getId()) {
+            $this->addFlash('error', 'You are not the owner of this car.');
+            return $this->redirectToRoute('my_cars');
+        }
+        
         $form = $this->createForm(CarType::class, $car);
         $form->handleRequest($request);
 
