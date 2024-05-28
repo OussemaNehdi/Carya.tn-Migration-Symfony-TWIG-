@@ -47,9 +47,6 @@ public function getAllCars(): array
 {
     $qb = $this->createQueryBuilder('cars');
     
-  
-        $qb->andWhere('cars.available = :available')
-           ->setParameter('available', 1);
     
 
     return $qb->orderBy('cars.id', 'ASC')

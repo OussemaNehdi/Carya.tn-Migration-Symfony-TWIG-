@@ -34,7 +34,10 @@
                     {% else %}
                         <a href="{{ path('my_cars_mark_car_available', {'id': car.id}) }}" class="edit">Mark Available</a>
                     {% endif %}
-                    <button id="markUnavailableButton{{ car.id }}">Mark Unavailable</button>
+
+
+
+                    
                     <button id="updateListingButton{{ car.id }}">Update Listing</button>
                     <button id="confirmButton{{ car.id }}">Confirm</button>
                 </div>

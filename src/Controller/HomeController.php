@@ -98,22 +98,30 @@ class HomeController extends AbstractController
     {
 
        
-        $filters = $CarsRepository->constructFilterQuery($request);       
+        $filters = $CarsRepository->constructFilterQuery($request);
+        
+
         if (!empty($filters)) {
             $Cars = $CarsRepository->findByFilters($filters);
         } else {
-            $Cars=$CarsRepository->getAllCars();
+            $Cars = $CarsRepository->getAllCars();
         }
+
+        $filteredCars = array_filter($Cars, function($car) {
+            return $car->isAvailable();
+        });
+
+        $Cars = array_values($filteredCars);
+
         return $this->render('home/rentCars.html.twig', [
             'bodyclass' => 'rent-body',
             'cars' => $Cars,
-            'brands'=>$CarsRepository-> getDistinctValues('brand'),
-            'models'=>$CarsRepository->getDistinctValues( 'model'),
-            'colors'=>$CarsRepository->getDistinctValues( 'color'),
-            'max_km'=>$CarsRepository->getMaxValue('km'),
-            'max_price'=>$CarsRepository->getMaxValue('price'),
+            'brands' => $CarsRepository->getDistinctValues('brand'),
+            'models' => $CarsRepository->getDistinctValues('model'),
+            'colors' => $CarsRepository->getDistinctValues('color'),
+            'max_km' => $CarsRepository->getMaxValue('km'),
+            'max_price' => $CarsRepository->getMaxValue('price'),
             'filter_data' => $filters,
-
         ]);
     }
     ///////
