@@ -47,7 +47,7 @@ public function getAllCars(): array
 {
     $qb = $this->createQueryBuilder('cars');
     
-    
+    //removed the avalible only filtering due to comptability reasons
 
     return $qb->orderBy('cars.id', 'ASC')
               ->getQuery()
