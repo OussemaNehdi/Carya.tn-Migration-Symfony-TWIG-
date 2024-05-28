@@ -97,7 +97,7 @@ class HomeController extends AbstractController
     public function formRentCar(Request $request , EntityManagerInterface $entityManager,UserPasswordHasherInterface $passwordHasher){
      
         $id=$request->get('id'); 
-        $user = $entityManager->getRepository(Users::class)->findByEmail($this->security->getUser()->getUserIdentifier());
+        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->security->getUser()->getUserIdentifier());
 
 
         $car = $car = $entityManager->getRepository(Cars::class)->find($id);   
