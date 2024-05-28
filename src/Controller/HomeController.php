@@ -342,10 +342,15 @@ class HomeController extends AbstractController
         $allRefused = true;
         foreach ($commands as $command) {
             if ($command->isConfirmed() == 1) {
-                $allRefused = false;
-                break;
+                // check if the command was already over
+                if ($command->getEndDate() > new \DateTime()) {
+                    $allRefused = false;
+                    break;
+                }
             }
         }
+        
+        
 
         if (!$allRefused) {
             $this->addFlash('error', 'Car cannot be deleted because it has pending commands.');
