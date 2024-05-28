@@ -210,16 +210,17 @@ class HomeController extends AbstractController
                 $this->security->login($user);
 
                 $rememberMe = $request->request->get('_remember_me');
-                if ($rememberMe) {
-                    // Create a remember-me cookie
-                    $token = $this->container->get('security.token_storage')->getToken();
-                    $this->container->get('security.token_storage')->setToken($token);
+                // This doesnt want to work for some reason, it's too advanced for me to fix it 
+                // if ($rememberMe) {
+                //     // Create a remember-me cookie
+                //     $token = $this->container->get('security.token_storage')->getToken();
+                //     $this->container->get('security.token_storage')->setToken($token);
 
-                    // Send remember-me cookie to the user
-                    $response = new Response();
-                    $rememberMeService = $this->container->get('security.authentication.rememberme.services.persistent.remember_me');
-                    $rememberMeService->loginSuccess($request, $response, $token);
-                }
+                //     // Send remember-me cookie to the user
+                //     $response = new Response();
+                //     $rememberMeService = $this->container->get('security.authentication.rememberme.services.persistent.remember_me');
+                //     $rememberMeService->loginSuccess($request, $response, $token);
+                // }
                 $this->addFlash('success', 'Welcome to Carya, Dear '. $user->getFirstName());
                 return $this->redirectToRoute('my_cars');
             } else {
@@ -237,6 +238,13 @@ class HomeController extends AbstractController
             /** @var Users $user */
             $user = $signupForm->getData();
 
+            // Check if email is already being used
+            $existingUser = $entityManager->getRepository(Users::class)->findOneBy(['email' => $user->getEmail()]);
+            if ($existingUser) {
+            $this->addFlash('error', 'Email is already taken.');
+            return $this->redirectToRoute('login');
+            }
+
             // Set default values
             $user->setRoles(['ROLE_USER']);
             $user->setProfileImage('default.png');
@@ -252,6 +260,7 @@ class HomeController extends AbstractController
             $entityManager->flush();
 
             // Redirect or any other post-signup action
+            $this->addFlash('success', 'Account created successfully. Please login.');
             return $this->redirectToRoute('login');
         }
 
