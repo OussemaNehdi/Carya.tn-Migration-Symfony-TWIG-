@@ -40,12 +40,20 @@
                     
                     
                     
+                    <button class="updateCarBtn" data-car-id="{{ car.id }}">Update Listing</button>
+                    <button id="confirmButton{{ car.id }}">Confirm</button>
                 </div>
                 
             </div>
             {% endfor %}
             
         </div>
+    </div>
+</div>
+
+<div id="updateCarModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
     </div>
 </div>
 
@@ -89,6 +97,44 @@
             modal.style.display = 'none';
         }
     }
+
+    $(document).ready(function() {
+    // Click event handler for updateCarBtn
+    $('.updateCarBtn').click(function(e) {
+        e.preventDefault(); // Prevent default link behavior
+        
+        var carId = $(this).data('car-id');
+        
+        // Show the update car modal
+        $('#updateCarModal').show();
+        
+        // AJAX call to fetch the update form
+        $.ajax({
+            url: '/update_car/' + carId,
+            type: 'GET',
+            success: function(response) {
+                // Inject the update form content into the modal
+                $('#updateCarModal .modal-content').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+    
+    // Close modal functionality
+    $('.close').click(function() {
+        $('.modal').hide();
+    });
+    
+    // Close modal if clicked outside of it
+    $(window).click(function(event) {
+        if ($(event.target).hasClass('modal')) {
+            $(event.target).hide();
+        }
+    });
+});
+
 </script>
 
 {% endblock %}
