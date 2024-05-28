@@ -1,0 +1,58 @@
+{# rent_car_form.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Rent Car Form{% endblock %}
+
+{% block body %}
+    <h2>Rent Car Form</h2>
+
+    {% if carDetails %}
+        <div class="car-details">
+            <h3>Car Details:</h3>
+            <p>Brand: {{ carDetails.brand }}</p>
+            <p>Model: {{ carDetails.model }}</p>
+            <p>Color: {{ carDetails.color }}</p>
+            <p>Price per Day: ${{ carDetails.price }}</p>
+        </div>
+
+        <h3>Unavailable Dates:</h3>
+        {% if unavailableDates is empty %}
+            <p>No unavailable dates</p>
+        {% else %}
+            {% for date in unavailableDates %}
+                <p>{{ date }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <h3>Rent Car:</h3>
+        <form action="{{ path('rent_car', {'car_id': carDetails.id}) }}" method="post">
+            {{ form_start(form) }}
+            <div class="sub-container">
+                <div class="label-container">
+                    <label for="start_date">Start Date:</label>
+                </div>
+                {{ form_widget(form.start_date) }}
+            </div>
+            <div class="sub-container">
+                <div class="label-container">
+                    <label for="end_date">End Date:</label>
+                </div>
+                {{ form_widget(form.end_date) }}
+            </div>
+            <div class="sub-container">
+                <div class="label-container">
+                    <label for="password">Password:</label>
+                </div>
+                {{ form_widget(form.password) }}
+            </div>
+            <div class="submit-container">
+                {{ form_row(form.car_id) }}
+                <input type="submit" class="submit-popup-button" value="Rent">
+            </div>
+            {{ form_end(form) }}
+        </form>
+    {% else %}
+        <p>No car details available.</p>
+    {% endif %}
+{% endblock %}
