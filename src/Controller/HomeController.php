@@ -211,6 +211,22 @@ class HomeController extends AbstractController
 
         return $this->redirectToRoute('my_cars');
     }
+    #[Route('/myCarsConfirmCarCommand/{id}', name: 'my_cars_confirm_car_command')]
+    public function myCarsConfirmCarCommand($id, EntityManagerInterface $entityManager): Response
+    {
+        $command = $entityManager->getRepository(Commands::class)->find($id);
+
+        if (!$command) {
+            throw $this->createNotFoundException('Command not found');
+        }
+
+        $command->setConfirmed(true);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Rent command confirmed successfully.');
+
+        return $this->redirectToRoute('my_cars');
+    }
 
     
 

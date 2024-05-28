@@ -11,7 +11,7 @@
                 <h2>My Car Listings</h2>
                 <button id="addCarBtn">Add Car</button>
             </div>
-            {{ dump(cars) }}
+            
             
             {% for car in cars %}
             <div class="car-listing-container">
@@ -35,11 +35,11 @@
                         <a href="{{ path('my_cars_mark_car_available', {'id': car.id}) }}" class="edit">Mark Available</a>
                     {% endif %}
 
-
-
-                    
                     <button id="updateListingButton{{ car.id }}">Update Listing</button>
-                    <button id="confirmButton{{ car.id }}">Confirm</button>
+                    <a href="#"><button id='ConfirmCommandsBtn{{ car.id }}'>Confirm Commands</button></a>
+                    
+                    
+                    
                 </div>
                 
             </div>
@@ -48,5 +48,63 @@
         </div>
     </div>
 </div>
+<div class="overlay" id="overlay"></div>
+
+<script>
+    window.addEventListener('scroll', function() {
+        var filterMenuContainer = document.getElementById('filterMenuContainer');
+        var contentContainer = document.querySelector('.content-container');
+        var scrollY = window.scrollY || window.pageYOffset;
+
+        if (scrollY > contentContainer.offsetTop) {
+            filterMenuContainer.style.top = (scrollY - contentContainer.offsetTop) + 'px';
+        } else {
+            filterMenuContainer.style.top = '0';
+        }
+    });
+
+    // Changed by AgressivePug
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for car in cars %}
+            // Add event listener for "Update Listing" button
+            document.getElementById("updateListingButton{{ car.id }}").addEventListener("click", function() {
+                document.getElementById("popup{{ car.id }}").style.display = "block";
+                document.getElementById("overlay").style.display = "block";
+            });
+
+            // Add event listener for "Confirm Commands" button
+            document.getElementById("ConfirmCommandsBtn{{ car.id }}").addEventListener("click", function() {
+                document.getElementById("commandsPopup{{ car.id }}").style.display = "block";
+                document.getElementById("overlay").style.display = "block";
+            });
+        {% endfor %}
+
+        // Add event listener to close popups and overlay when clicking outside popups
+        document.getElementById("overlay").addEventListener("click", function() {
+            {% for car in cars %}
+                document.getElementById("popup{{ car.id }}").style.display = "none";
+                document.getElementById("commandsPopup{{ car.id }}").style.display = "none";
+            {% endfor %}
+            document.getElementById("addCarPopup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        });
+
+        document.getElementById("addCarBtn").addEventListener("click", function() {
+            document.getElementById("addCarPopup").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        });
+    });
+
+    function displayFileNameUpdate(input, id) {
+        var fileName = input.files[0].name;
+        var fileNameElement = document.getElementById('update-name' + id);
+        if (fileName.length > 20) {
+            fileName = fileName.substring(0, 20) + "..."; // Truncate if over 20 characters
+        }
+        fileNameElement.textContent = fileName;
+    }
+</script>
 {% endblock %}
+
+
 
