@@ -6,6 +6,7 @@ use App\Entity\Users;
 use App\Entity\Cars;
 use App\Entity\Commands;
 use App\Form\ContactType;
+use App\Form\CommandsType;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,7 @@ use App\Repository\CarsRepository;
 
 
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use App\Form\CarType;
 use App\Form\UpdateCarType;
@@ -92,19 +94,47 @@ class HomeController extends AbstractController
         ]);
     }
     #[Route('/rentCar/{id}', name: 'rent_car')]
-    public function formRentCar(Request $request , EntityManagerInterface $entityManager){
+    public function formRentCar(Request $request , EntityManagerInterface $entityManager,UserPasswordHasherInterface $passwordHasher){
+     
         $id=$request->get('id'); 
+        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->security->getUser()->getUserIdentifier());
+
+
         $car = $car = $entityManager->getRepository(Cars::class)->find($id);   
         $command = new Commands();
-        $form = $this->createForm(UpdateCarType::class, $command);
+        $form = $this->createForm(CommandsType::class, $command);
         $form->handleRequest($request);
+        
+        $startDate = $form->get('start_date')->getData();
+        $endDate = $form->get('end_date')->getData();
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $command->setCarId($id);
-            $command->setUserId($this->getUser());
-            $command->setConfirmed(null);
-            $entityManager->persist($command);
-            $entityManager->flush();
-            $this->addFlash('success', 'Car rented successfully.');
+            $commandsRepository=$entityManager->getRepository(Commands::class);
+            if ($commandsRepository->isCarRented($user->getId(),$id, $startDate, $endDate)) {
+                $this->addFlash('error', 'Car is not available for the selected dates.');
+                return $this->redirectToRoute('rent_cars');
+            }
+            
+            
+            if ($passwordHasher->isPasswordValid($user,$request->request->get('password'))) {
+                
+                $command->setCarId($car);
+                $command->setUserId($this->security->getUser());
+                $command->setConfirmed(null);
+                $command->setRentalDate(new \DateTime());
+                $command->setStartDate($startDate);
+                $command->setEndDate($endDate);
+                $command->setRentalPeriod($endDate->diff($startDate)->days);
+
+
+                $entityManager->persist($command);
+                $entityManager->flush();
+                $this->addFlash('success', 'Car rented successfully.');
+            } else {
+           
+                $this->addFlash('error', 'Password incorrect.');
+            }
+           
             return $this->redirectToRoute('rent_cars');
         }
         return $this->render('forms/rentCar.html.twig', [

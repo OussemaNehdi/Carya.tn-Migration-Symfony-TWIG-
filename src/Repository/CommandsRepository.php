@@ -40,4 +40,21 @@ class CommandsRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+public function isCarRented(int $userId, int $carId, \DateTimeInterface $startDate, \DateTimeInterface $endDate): bool
+{
+    $qb = $this->createQueryBuilder('cmd')
+        ->select('COUNT(cmd.id)')
+        ->where('cmd.car_id = :carId')
+        ->andWhere('(cmd.confirmed = 1 OR (cmd.confirmed IS NULL AND cmd.user_id = :userId))')
+        ->andWhere('((cmd.start_date <= :startDate AND cmd.end_date >= :startDate) OR (cmd.start_date <= :endDate AND cmd.end_date >= :endDate))')
+        ->setParameter('carId', $carId)
+        ->setParameter('userId', $userId)
+        ->setParameter('startDate', $startDate)
+        ->setParameter('endDate', $endDate);
+
+    return (int) $qb->getQuery()->getSingleScalarResult() > 0;
+}
+
+
 }

@@ -21,48 +21,79 @@
                         <p><strong>Color:</strong> {{ car.color }}</p>
                         <p><strong>Kilometers:</strong> {{ car.km }} km</p>
                         <p><strong>Price:</strong> ${{ car.price }}</p>
-                        <div class="rent-button">
-                                <button class="item-button" id="rentCarButton{{car.id}}" car-id="{{car.id}}">Rent</button>
-                        </div>
+                           {% if app.user %}
+
+
+                            <div class="rent-button">
+                                <button class="rent_car_btn" id="rentCarButton{{car.id}}" data-car-id="{{car.id}}">Rent</button>
+                            </div>
+                            {% else %}
+
+                            <div class="rent-button">
+                                <button onclick="window.location.href='{{ path('login') }}' ">Login to rent </button>
+                            </div>
+                                
+                            
+                         
+                           {% endif %}
+                        
+
+                        
                     </div>
                     
-                   
-                {% endfor %}
+                   {% endfor %}
+               
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal Structure -->
+<div id="rentCarModal" class="modal rent">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+       
+    </div>
+</div>
+
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-            // Add event listeners to all buttons with class "item-button"
-            document.querySelectorAll('.item-button').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var itemName = button.getAttribute('car-id');
-                    document.getElementById('popup'+itemName).style.display = "block";
-                                var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/rent-form/' + carId, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                       
-                        popup.innerHTML = xhr.responseText;
-                        popup.style.display = "block";
-                    } else {
-                        console.error('Failed to fetch rent form');
-                    }
+    $(document).ready(function() {
+        // Click event handler for rent car button
+        $('.rent_car_btn').click(function(e) {
+            e.preventDefault(); // Prevent default button behavior
+            
+            var carId = $(this).data('car-id');
+            
+            // Show the rent car modal
+            $('#rentCarModal').show();
+            
+            // AJAX call to fetch the rent form
+            $.ajax({
+                url: '/rentCar/' + carId,
+                type: 'GET',
+                success: function(response) {
+                    // Inject the rent form content into the modal
+                    $('#rentCarModal .modal-content').html(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
                 }
-            };
-            xhr.send();
-                   
-                });
-            });
-            document.querySelectorAll('.close').forEach(function(closeButton) {
-            closeButton.addEventListener('click', function() {
-                var itemName = closeButton.getAttribute('car-id');
-                document.getElementById('popup'+itemName).style.display = "none";
             });
         });
+        
+        // Close modal functionality
+        $(document).on('click', '.close', function() {
+            $('.modal').hide();
         });
+        
+        // Close modal if clicked outside of it
+        $(window).click(function(event) {
+            if ($(event.target).hasClass('modal')) {
+                $(event.target).hide();
+            }
+        });
+    });
 </script>
+
 {% endblock %}
 
