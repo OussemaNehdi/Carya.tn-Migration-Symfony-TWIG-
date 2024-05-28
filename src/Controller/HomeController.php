@@ -166,9 +166,17 @@ class HomeController extends AbstractController
 
         $userCars = $CarsRepository->findCarsByUserId($Cars, $user->getId());
 
+        $commands_associative_x = []; // associative array that contains the car id associated to it the commands of that car id
+        // example : 2 -> [command 1 , command 2]
+        foreach ($userCars as $car) {
+            $commands = $entityManager->getRepository(Commands::class)->findBy(['car_id' => $car]);
+            $commands_associative_x[$car->getId()] = $commands;
+        }
+
         return $this->render('home/myCars.html.twig', [
             'bodyclass' => 'listing-body',
             'cars' => $userCars,
+            'commands_associative' => $commands_associative_x,
             'brands' => $CarsRepository->getDistinctValues('brand'),
             'models' => $CarsRepository->getDistinctValues('model'),
             'colors' => $CarsRepository->getDistinctValues('color'),

@@ -11,7 +11,7 @@
                 <h2>My Car Listings</h2>
                 <button id="addCarBtn">Add Car</button>
             </div>
-            
+            {{ dump(cars) }}
             
             {% for car in cars %}
             <div class="car-listing-container">
@@ -35,10 +35,8 @@
                         <a href="{{ path('my_cars_mark_car_available', {'id': car.id}) }}" class="edit">Mark Available</a>
                     {% endif %}
 
-                    
-                    
-                    
-                    
+
+
                     
                     <button class="updateCarBtn" data-car-id="{{ car.id }}">Update Listing</button>
                     <button id="confirmButton{{ car.id }}">Confirm</button>
@@ -50,6 +48,15 @@
         </div>
     </div>
 </div>
+
+{% for car in cars %}
+{% set commands = commands_associative[car.id] %}
+
+{% include 'home/confirm_command_popup.html.twig' %}
+
+
+{% endfor %}
+
 
 <div id="updateCarModal" class="modal update">
     <div class="modal-content">
@@ -80,6 +87,8 @@
     closeBtn.addEventListener('click', closeModal);
     // Listen for outside click
     window.addEventListener('click', outsideClick);
+
+    
 
     // Function to open modal
     function openModal() {
@@ -135,12 +144,7 @@
     });
 });
 
+
 </script>
 
-
-
-
 {% endblock %}
-
-
-
