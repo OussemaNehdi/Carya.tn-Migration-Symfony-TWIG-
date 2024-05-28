@@ -87,7 +87,7 @@ ul{
 /* ================== Popups ================== */
 /* ------------------ Rent car Modal ------------------ */
 /* Modal Container */
-.modal {
+.rent {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -99,7 +99,7 @@ ul{
 }
 
 /* Modal Content */
-.modal-content {
+.rent .modal-content {
     background-color: rgba(254, 254, 254, 0.87);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -114,22 +114,22 @@ ul{
 }
 
 /* Close Button */
-.modal .close {
+.rent .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
 
-.modal .close:hover,
-.modal .close:focus {
+.rent .close:hover,
+.rent .close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
 }
 
 
-.modal .modal-content .add-titles{
+.rent .modal-content .add-titles{
     margin-top: 0 ;
     width: 100%;
     display: flex;
@@ -138,14 +138,14 @@ ul{
     margin-bottom: 8px;
 
 }
-.modal .modal-content .add-titles h2{
+.rent .modal-content .add-titles h2{
     all: unset;
 
     color: black; 
     font-size: 30px;
     font-weight: 600;
 }
-.modal .modal-content .form-container{
+.rent .modal-content .form-container{
     height: 100%;
     width: 100%;
     display: flex;
@@ -153,24 +153,24 @@ ul{
     align-items: center;
     flex-direction: column;
 }
-.modal .modal-content .form-container .sub-container{
+.rent .modal-content .form-container .sub-container{
     width: 100%;
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
 }
-.modal .modal-content .form-container label{
+.rent .modal-content .form-container label{
     width: 150px;
 }
 
-.modal .modal-content .submit-add-popup{
+.rent .modal-content .submit-add-popup{
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 10px;
     margin-bottom: 10px;
 }
-.modal .submit-popup-button {
+.rent .submit-popup-button {
     background-color: #b87926e0;
     color: #fff;
     padding: 6px 14px;
@@ -178,21 +178,21 @@ ul{
     border-radius: 5px;
     cursor: pointer;
 }
-.modal .submit-popup-button:hover {
+.rent .submit-popup-button:hover {
     transition: all 0.3s ease-in-out;
     background-color: #db9b46e0;
 }
-.modal .custom-file-upload input[type="file"] {
+.rent .custom-file-upload input[type="file"] {
     display: none;
 }
-.modal .sub-container1 {
+.rent .sub-container1 {
     width:100%;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
-.modal .upload-icon {
+.rent .upload-icon {
     display: inline-block;
     padding: 10px 20px; /* Adjust padding as needed */
     width: 200px;
@@ -203,11 +203,11 @@ ul{
     cursor: pointer;
     transform: translate(-24px, 0);
 }
-.modal .upload-icon:hover{
+.rent .upload-icon:hover{
     background-color: #db9b46e0;
     transition: all 0.3s ease-in-out;
 }
-.modal .upload-icon::before {
+.rent .upload-icon::before {
     content: '\f093'; /* Unicode for upload icon */
     font-family: FontAwesome; /* Font Awesome for the icon */
     margin-right: 5px; /* Adjust margin as needed */
@@ -218,8 +218,106 @@ ul{
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+/* ------------------ End of Rent car Modal Popup ------------------ */
+/* ------------------ Update car Modal Popup ------------------ */
+.update {
+    all: unset;
 
-/* ------------------ End of Rent car Modal ------------------ */
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.update .modal-content {
+    background-color: rgba(254, 254, 254, 0.87);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(136, 136, 136, 0.5);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 30%;
+    max-width: 400px;
+    top: -10%;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+.update .form-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.update .add-titles {
+    margin-bottom: 30px;
+}
+.update .sub-container {
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0px;
+
+}
+.update .sub-container label {
+    width: 150px;
+}
+.update .custom-file-upload input[type="file"] {
+    display: none;
+}
+.update .sub-container1 {
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.update .upload-icon {
+    display: inline-block;
+    padding: 10px 20px; /* Adjust padding as needed */
+    width: 200px;
+    text-align: center;
+    background-color: #b87926e0; 
+    color: #fff; /* Adjust text color as needed */
+    border-radius: 5px; /* Adjust border radius as needed */
+    cursor: pointer;
+}
+.update .upload-icon:hover{
+    background-color: #db9b46e0;
+    transition: all 0.3s ease-in-out;
+}
+.update .upload-icon::before {
+    content: '\f093'; /* Unicode for upload icon */
+    font-family: FontAwesome; /* Font Awesome for the icon */
+    margin-right: 5px; /* Adjust margin as needed */
+}
+.update .submit-popup-button {
+    background-color: #b87926e0;
+    color: #fff;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.update .submit-popup-button:hover {
+    transition: all 0.3s ease-in-out;
+    background-color: #db9b46e0;
+}
+.update .checkbock{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+
+/* ------------------ End of Update car Modal Popup ------------------ */
+
 
 
 /* ================== Pages / Routes ================== */
