@@ -93,14 +93,15 @@ class HomeController extends AbstractController
     }
     #[Route('/rentCar/{id}', name: 'rent_car')]
     public function formRentCar(Request $request , EntityManagerInterface $entityManager){
-        $id=$request->get('id');    
+        $id=$request->get('id'); 
+        $car = $car = $entityManager->getRepository(Cars::class)->find($id);   
         $command = new Commands();
         $form = $this->createForm(UpdateCarType::class, $command);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $command->setCarId($id);
-            $command->setUserId($this->getUser()->getId());
-            $command->setConfirmed(0);
+            $command->setUserId($this->getUser());
+            $command->setConfirmed(null);
             $entityManager->persist($command);
             $entityManager->flush();
             $this->addFlash('success', 'Car rented successfully.');
@@ -108,15 +109,13 @@ class HomeController extends AbstractController
         }
         return $this->render('forms/rentCar.html.twig', [
             'form' => $form->createView(),
-            'carDetails'=>$entityManager->getRepository(Cars::class)->find($id)
+            'carDetails'=>$car
         ]);
     }
   
     #[Route('/rentCars', name: 'rent_cars')]
     public function rentCars(CarsRepository $CarsRepository,Request $request): Response
     {
-
-
         $filters = $CarsRepository->constructFilterQuery($request);       
         if (!empty($filters)) {
             $Cars = $CarsRepository->findByFilters($filters);
@@ -357,6 +356,24 @@ class HomeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('cars_images_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Handle exception if something happens during file upload
+                }
+
+                // Set the image filename in the Car entity
+                $car->setImage($newFilename);
+            }
             // Handle form submission and updating the car entity in the database
             $entityManager->flush();
 
