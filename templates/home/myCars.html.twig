@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <a href="{{ path('my_cars_delete_car', {'id': car.id}) }}" class="delete-link"><button>Delete</button></a>
+                    <a href="{{ path('delete_car', {'id': car.id}) }}" class="delete-link"><button>Delete</button></a>
                     {% if car.isAvailable %}
                         <a href="{{ path('my_cars_mark_car_unavailable', {'id': car.id}) }}" class="edit"><button>Mark Unavailable</button></a>
                     {% else %}

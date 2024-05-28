@@ -181,7 +181,7 @@ class HomeController extends AbstractController
             'filter_data' => $filters,
         ]);
     }
-  
+
     #[Route('/myCars', name: 'my_cars')]
     public function myCars(CarsRepository $CarsRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -233,9 +233,10 @@ class HomeController extends AbstractController
     { 
         $car = $entityManager->getRepository(Cars::class)->find($id);
 
+        // Check if the car has commands
         $commands = $entityManager->getRepository(Commands::class)->findBy(['car_id' => $car]);
 
-       
+        // Checks if all are refused
         $allRefused = true;
         foreach ($commands as $command) {
             if ($command->isConfirmed() != 0) {
@@ -244,7 +245,7 @@ class HomeController extends AbstractController
             }
         }
 
-        
+        // delete the commands
         foreach ($commands as $command) {
             $entityManager->remove($command);
         }
@@ -372,6 +373,41 @@ class HomeController extends AbstractController
             throw $this->createNotFoundException('The car does not exist');
         }
 
+        // check if the user is the owner of the car
+        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier());
+        if ($car->getOwnerId()->getId() !== $user->getId()) {
+            $this->addFlash('error', 'You are not the owner of this car.');
+            return $this->redirectToRoute('my_cars'); // Adjust the route name to your car list page
+        }
+
+        // Check if the car has commands
+        $commands = $entityManager->getRepository(Commands::class)->findBy(['car_id' => $car]);
+
+        // Checks if all are refused
+        $allRefused = true;
+        foreach ($commands as $command) {
+            if ($command->isConfirmed() == 1) {
+                // check if the command was already over
+                if ($command->getEndDate() > new \DateTime()) {
+                    $allRefused = false;
+                    break;
+                }
+            }
+        }
+        
+
+
+        if (!$allRefused) {
+            $this->addFlash('error', 'Car cannot be deleted because it has pending commands.');
+            return $this->redirectToRoute('my_cars');
+        }
+
+        // delete the commands
+        foreach ($commands as $command) {
+            $entityManager->remove($command);
+        }
+
+
         // Remove the car
         $entityManager->remove($car);
         $entityManager->flush();
@@ -432,6 +468,14 @@ class HomeController extends AbstractController
     {
         $id = $request->get('id');
         $car = $entityManager->getRepository(Cars::class)->find($id);
+
+        // check if user is owner of the car
+        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier());
+        if ($car->getOwnerId()->getId() !== $user->getId()) {
+            $this->addFlash('error', 'You are not the owner of this car.');
+            return $this->redirectToRoute('my_cars');
+        }
+        
         $form = $this->createForm(CarType::class, $car);
         $form->handleRequest($request);
 
