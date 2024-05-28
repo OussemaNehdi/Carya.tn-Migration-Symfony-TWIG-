@@ -108,14 +108,25 @@ class HomeController extends AbstractController
         $startDate = $form->get('start_date')->getData();
         $endDate = $form->get('end_date')->getData();
 
+        $currentDate = new \DateTime();
+
         if ($form->isSubmitted() && $form->isValid()) {
+
+
+
             $commandsRepository=$entityManager->getRepository(Commands::class);
+            if($endDate < $startDate or  $currentDate>$startDate) {
+                $this->addFlash('error','invalid Date ');
+                return $this->redirectToRoute('rent_cars');
+            }
+            
+            
             if ($commandsRepository->isCarRented($user->getId(),$id, $startDate, $endDate)) {
                 $this->addFlash('error', 'Car is not available for the selected dates.');
                 return $this->redirectToRoute('rent_cars');
             }
             
-            
+
             if ($passwordHasher->isPasswordValid($user,$request->request->get('password'))) {
                 
                 $command->setCarId($car);
@@ -170,11 +181,11 @@ class HomeController extends AbstractController
             'filter_data' => $filters,
         ]);
     }
-    ///////
+  
     #[Route('/myCars', name: 'my_cars')]
     public function myCars(CarsRepository $CarsRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Check if user is authenticated
+        
         if (!$this->getUser()) {
             return $this->redirectToRoute('login');
         }
@@ -196,8 +207,7 @@ class HomeController extends AbstractController
 
         $userCars = $CarsRepository->findCarsByUserId($Cars, $user->getId());
 
-        $commands_associative_x = []; // associative array that contains the car id associated to it the commands of that car id
-        // example : 2 -> [command 1 , command 2]
+        $commands_associative_x = []; 
         foreach ($userCars as $car) {
             $commands = $entityManager->getRepository(Commands::class)->findBy(['car_id' => $car]);
             $commands_associative_x[$car->getId()] = $commands;
@@ -223,10 +233,9 @@ class HomeController extends AbstractController
     { 
         $car = $entityManager->getRepository(Cars::class)->find($id);
 
-        // Check if the car has commands
         $commands = $entityManager->getRepository(Commands::class)->findBy(['car_id' => $car]);
 
-        // Checks if all are refused
+       
         $allRefused = true;
         foreach ($commands as $command) {
             if ($command->isConfirmed() != 0) {
@@ -235,7 +244,7 @@ class HomeController extends AbstractController
             }
         }
 
-        // delete the commands
+        
         foreach ($commands as $command) {
             $entityManager->remove($command);
         }

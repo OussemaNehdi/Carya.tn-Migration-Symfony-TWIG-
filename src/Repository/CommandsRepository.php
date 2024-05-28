@@ -65,7 +65,7 @@ public function findActiveRentingCarsByUser(int $userId): array
         ->innerJoin('cmd.car_id', 'car')
         ->where('cmd.user_id = :user_id')
         ->andWhere('cmd.start_date <= :today')
-        ->andWhere('cmd.end_date >= :today')
+        ->andWhere('cmd.end_date >= :today AND cmd.confirmed=1')
         ->setParameter('user_id', $userId)
         ->setParameter('today', new \DateTime());
 
