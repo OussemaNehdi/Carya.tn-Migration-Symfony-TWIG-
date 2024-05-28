@@ -1,51 +1,49 @@
-<div id="commandsPopup{{ car.id }}" class="command-popup">
-    <div class="main-container">
-        <div class="titles">
-            <h2>Commands</h2>
-        </div>
-        {% if commands is empty %}
-            <p>No commands available</p>
-        {% endif %}
-        {% for command in commands %}
-            <div class="sub-container">
-                {% set status = "Unreviewed" %}
-                {% if command.confirmed is defined %}
-                    {% if command.confirmed %}
-                        {% set status = "Accepted" %}
-                    {% else %}
-                        {% set status = "Refused" %}
-                    {% endif %}
-                {% endif %}
-                <div class="details">
-                    <div class="mini-titles">
-                        <span>User:</span>
-                        <span>Rental Date:</span>
-                        <span>Start Date:</span>
-                        <span>End Date:</span>
-                        <span>Duration:</span>
-                        <span>Status:</span> 
-                    </div>
-                    <div class="mini-details">
-                        <p>{{ command.rentalDate|date('Y-m-d') }}</p>
-                        <p>{{ command.startDate|date('Y-m-d') }}</p>
-                        <p>{{ command.endDate|date('Y-m-d') }}</p>
-                        <p>{{ command.rentalPeriod }} days</p>
-                        <p>{{ status }}</p>
-                    </div>
-                </div>
-                {% if status == "Unreviewed" %}
-                    <div class="action-buttons">
-                        <form method="post" action="#">
-                            <input type="hidden" name="command_id" value="{{ command.command_id }}">
-                            <button type="submit" name="accept" class="button-accept">Accept</button>
-                        </form>
-                        <form method="post" action="#">
-                            <input type="hidden" name="command_id" value="{{ command.command_id }}">
-                            <button type="submit" name="refuse" class="button-deny">Refuse</button>
-                        </form>
-                    </div>
-                {% endif %}
-            </div>
-        {% endfor %}
+<div class="main-container">
+    <div class="titles">
+        <h2>Commands</h2>
     </div>
+    {% if commands is empty %}
+        <p>No commands available</p>
+    {% endif %}
+    {% for command in commands %}
+        <div class="sub-container">
+            {% set status = "Unreviewed" %}
+            {% if command.confirmed is defined %}
+                {% if command.confirmed %}
+                    {% set status = "Accepted" %}
+                {% else %}
+                    {% set status = "Refused" %}
+                {% endif %}
+            {% endif %}
+            <div class="details">
+                <div class="mini-titles">
+                    <span>User:</span>
+                    <span>Rental Date:</span>
+                    <span>Start Date:</span>
+                    <span>End Date:</span>
+                    <span>Duration:</span>
+                    <span>Status:</span> 
+                </div>
+                <div class="mini-details">
+                    <p>{{ command.rentalDate|date('Y-m-d') }}</p>
+                    <p>{{ command.startDate|date('Y-m-d') }}</p>
+                    <p>{{ command.endDate|date('Y-m-d') }}</p>
+                    <p>{{ command.rentalPeriod }} days</p>
+                    <p>{{ status }}</p>
+                </div>
+            </div>
+            {% if status == "Unreviewed" %}
+                <div class="action-buttons">
+                    <form method="post" action="#">
+                        <input type="hidden" name="command_id" value="{{ command.command_id }}">
+                        <button type="submit" name="accept" class="button-accept">Accept</button>
+                    </form>
+                    <form method="post" action="#">
+                        <input type="hidden" name="command_id" value="{{ command.command_id }}">
+                        <button type="submit" name="refuse" class="button-deny">Refuse</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
 </div>
