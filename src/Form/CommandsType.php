@@ -15,26 +15,15 @@ class CommandsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('rental_date', null, [
-                'widget' => 'single_text',
-            ])
+
             ->add('start_date', null, [
                 'widget' => 'single_text',
             ])
             ->add('end_date', null, [
                 'widget' => 'single_text',
-            ])
-            ->add('rental_period')
-            ->add('confirmed')
-            ->add('car_id', EntityType::class, [
-                'class' => Cars::class,
-                'choice_label' => 'id',
-            ])
-            ->add('user_id', EntityType::class, [
-                'class' => Users::class,
-                'choice_label' => 'id',
-            ])
-        ;
+            ]);
+            
+           
     }
 
     public function configureOptions(OptionsResolver $resolver): void
