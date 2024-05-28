@@ -1,12 +1,52 @@
+<div class="add-titles">
+        <h2>Add Car</h2>
+</div>
 <form id="addCarForm" method="POST" action="{{ path('add_car') }}" enctype="multipart/form-data">
 {{ form_start(form) }}
-    {{ form_row(form.brand) }}
-    {{ form_row(form.model) }}
-    {{ form_row(form.color) }}
-    {{ form_row(form.image) }}
-    {{ form_row(form.km) }}
-    {{ form_row(form.price) }}
-    {{ form_row(form.available) }}
-    <button type="submit">Add Car</button>
+    <div class="form-container">
+        <div class="sub-container">
+            {{ form_row(form.brand) }}
+        </div>
+        <div class="sub-container">
+            {{ form_row(form.model) }}
+        </div>
+        <div class="sub-container">
+        {{ form_row(form.color) }}
+        </div>
+        <div class="sub-container">
+        {{ form_row(form.km) }}
+        </div>
+        <div class="sub-container">
+        {{ form_row(form.price) }}
+        </div>
+        <div class="sub-container">
+        {{ form_row(form.available) }}
+        </div>
+        <div class="sub-container1">
+            <label for="car_image" class="custom-file-upload">
+                <span class="upload-icon">Upload Image</span>
+                {{ form_widget(form.image, {'attr': {'onchange': 'displayFileName(this)'}, 'label': false}) }}
+                
+            </label>
+            <div class="no-file-name">
+                    <span id="file-name">No file chosen</span>
+            </div>
+        </div>
+        <div class="submit-add-popup">
+            <button type="submit">Add Car</button>
+        </div>
+    </div>
 {{ form_end(form) }}
+<script>
+    function displayFileName(input) {
+    var fileName = input.files[0].name;
+    var fileNameElement = document.getElementById("file-name");
+    
+    if (fileName.length > 20) {
+        fileName = fileName.substring(0, 20) + "..."; // Truncate if over 20 characters
+    }
+    
+    fileNameElement.textContent = fileName;
+}
+</script>
 </form>
