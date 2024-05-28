@@ -322,6 +322,8 @@ class HomeController extends AbstractController
             $entityManager->persist($car);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Car added successfully ');
+
             return $this->redirectToRoute('my_cars'); // or any route you want to redirect to
         }
 
@@ -344,6 +346,8 @@ class HomeController extends AbstractController
             // Redirect to some route after successful update
             return $this->redirectToRoute('my_cars');
         }
+
+        $this->addFlash('success', 'car updated successfully');
 
         return $this->render('forms/updateCar.html.twig', [
             'form' => $form->createView(),
