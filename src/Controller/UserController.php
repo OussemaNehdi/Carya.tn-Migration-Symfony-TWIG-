@@ -257,7 +257,7 @@ class UserController extends AbstractController
     #[Route('/profile', name: 'profile')]
     public function Profile(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $user= $this->getUser();
+        $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier());
         $userId=$user->getId();
         $form = $this->createForm(ProfileType::class, $user);
 

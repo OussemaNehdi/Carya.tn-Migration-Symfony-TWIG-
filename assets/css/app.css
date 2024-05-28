@@ -274,7 +274,17 @@ ul{
     flex-direction: column;
 }
 .update .add-titles {
+    display: flex;
+    align-items: center;
     margin-bottom: 30px;
+    justify-content: center;
+}
+.update .modal-content .add-titles h2{
+    all: unset;
+
+    color: black; 
+    font-size: 30px;
+    font-weight: 600;
 }
 .update .sub-container {
     align-items: center;
@@ -1233,6 +1243,10 @@ ul{
 .profile-body .comments .comment1{
     font-size: 12px;
     color: rgb(117, 116, 116);
+}
+.profile-body ul {
+    margin: 0;
+    padding: 0;
 }
 /* ------------------ end of Profile Page ------------------*/
 
