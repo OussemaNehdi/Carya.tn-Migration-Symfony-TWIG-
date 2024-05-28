@@ -591,21 +591,41 @@ class HomeController extends AbstractController
     {
         $car = new Cars();
         $form = $this->createForm(CarType::class, $car);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('cars_images_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Handle exception if something happens during file upload
+                }
+
+                // Set the image filename in the Car entity
+                $car->setImage($newFilename);
+            }
+
+            // Set the ownerId to the currently logged-in user
             $user = $this->security->getUser();
+            
             $car->setOwnerId($user);
+            
 
             $entityManager->persist($car);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Car added successfully.');
-
-            return $this->redirectToRoute('car_list'); // Adjust the route name to your car list page
+            return $this->redirectToRoute('admin_dashboard'); // or any route you want to redirect to
         }
 
-        return $this->render('forms/add_car.html.twig', [
+        return $this->render('forms/addCar.html.twig', [
             'form' => $form->createView(),
         ]);
     }
