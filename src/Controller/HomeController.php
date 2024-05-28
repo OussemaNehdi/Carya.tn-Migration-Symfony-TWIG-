@@ -24,6 +24,7 @@ use App\Repository\CarsRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use App\Form\CarType;
+use App\Form\UpdateCarType;
 
 
 
@@ -261,6 +262,27 @@ class HomeController extends AbstractController
 
         return $this->render('forms/addCar.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+    #[Route('/update_car/{id}', name: 'update_car')]
+    public function updateCar(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $id = $request->get('id');
+        $car = $entityManager->getRepository(Cars::class)->find($id);
+        $form = $this->createForm(CarType::class, $car);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Handle form submission and updating the car entity in the database
+            $entityManager->flush();
+
+            // Redirect to some route after successful update
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
+        return $this->render('forms/updateCar.html.twig', [
+            'form' => $form->createView(),
+            'car' => $car
         ]);
     }
 }
