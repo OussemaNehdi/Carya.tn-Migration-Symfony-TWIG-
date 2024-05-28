@@ -220,12 +220,29 @@ class HomeController extends AbstractController
     
     #[Route('/myCarsDeleteCar/{id}', name: 'my_cars_delete_car')]
     public function myCarsDeleteCar($id, EntityManagerInterface $entityManager, Request $request): Response
-    {
-        
+    { 
         $car = $entityManager->getRepository(Cars::class)->find($id);
 
-        if (!$car) {
-            throw $this->createNotFoundException('ERROR : no car found');
+        // Check if the car has commands
+        $commands = $entityManager->getRepository(Commands::class)->findBy(['car_id' => $car]);
+
+        // Checks if all are refused
+        $allRefused = true;
+        foreach ($commands as $command) {
+            if ($command->isConfirmed() != 0) {
+                $allRefused = false;
+                break;
+            }
+        }
+
+        // delete the commands
+        foreach ($commands as $command) {
+            $entityManager->remove($command);
+        }
+
+        if (!$allRefused) {
+            $this->addFlash('error', 'Car cannot be deleted because it has pending commands.');
+            return $this->redirectToRoute('my_cars');
         }
 
         $entityManager->remove($car);

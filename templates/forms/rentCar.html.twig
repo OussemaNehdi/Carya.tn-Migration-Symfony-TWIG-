@@ -1,48 +1,42 @@
-
-
-
-
-
-    <h2>Rent Car Form</h2>
-   
+    <div class="popup-titles">
+        <h2>Rent Car Form</h2>
+    </div>
     {% if carDetails %}
         <div class="car-details">
             <h3>Car Details:</h3>
-            <p>Brand: {{ carDetails.brand }}</p>
-            <p>Model: {{ carDetails.model }}</p>
-            <p>Color: {{ carDetails.color }}</p>
-            <p>Price per Day: ${{ carDetails.price }}</p>
+            <p><span class="mini-titles">Brand</span>: {{ carDetails.brand }}</p>
+            <p><span class="mini-titles">Model</span>: {{ carDetails.model }}</p>
+            <p><span class="mini-titles">Color</span>: {{ carDetails.color }}</p>
+            <p><span class="mini-titles">Price</span>: ${{ carDetails.price }}</p>
         </div>
-
-
-
-        <h3>Rent Car:</h3>
+        <div class="car-details">
+            <h3>Rent Car:</h3>
+        
         {{ form_start(form, { 'action': path('rent_car', { 'id': carDetails.id }), 'method': 'POST' }) }}
             
             <div class="sub-container">
                 <div class="label-container">
-                    <label for="start_date">Start Date:</label>
+                    <label for="start_date"><span class="mini-titles">Start Date</span>:</label>
                 </div>
                 {{ form_widget(form.start_date) }}
             </div>
             <div class="sub-container">
                 <div class="label-container">
-                    <label for="end_date">End Date:</label>
+                    <label for="end_date"><span class="mini-titles">End Date</span>:</label>
                 </div>
                 {{ form_widget(form.end_date) }}
             </div>
             <div class="sub-container">
                 <div class="label-container">
-                    <label for="password">Password:</label>
+                    <label for="password"><span class="mini-titles">Password</span>:</label>
                 </div>
                 <input type="password" id="password" name="password" required>
             </div>
             <div class="submit-container">
-                
                 <input type="submit" class="submit-popup-button" value="Rent">
             </div>
             {{ form_end(form) }}
-        
+        </div>
     {% else %}
         <p>No car details available.</p>
     {% endif %}

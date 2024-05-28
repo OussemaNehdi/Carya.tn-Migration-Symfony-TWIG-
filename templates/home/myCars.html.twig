@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+
 <div class="main-container">
     <div class="filter-menu" id="filterMenuContainer">
         {% include '/home/filter.html.twig' %}
@@ -38,21 +40,22 @@
                     <button class="confirmCommandsBtn" data-car-id="{{ car.id }}">Confirm</button>
                 </div>
             </div>
-
-            {% set commands = commands_associative[car.id] %}
-
-            {% include 'home/confirm_command_popup.html.twig' %}
             
             {% endfor %}
 
-        </div>
+        </div>  
     </div>
 </div>
 
-
+{% for car in cars %}
+    <div id="commandsPopup{{ car.id }}" class="command-popup">
+        {% set commands = commands_associative[car.id] %}
+        {% include 'home/confirm_command_popup.html.twig' %}
+    </div>
+{% endfor %}
 
 <!-- Add Car Modal -->
-<div id="addCarModal" class="modal rent">
+<div id="addCarModal" class="modal add">
     <div class="modal-content">
         <span class="close">&times;</span>
         {% include 'forms/addCar.html.twig' %}
@@ -68,6 +71,7 @@
 <!-- Overlay to cover the background -->
 <div class="overlay" id="overlay" style="display:none;"></div>
 
+
 <script>
 // Get modal element
 var modal = document.getElementById('addCarModal');
@@ -76,12 +80,35 @@ var modalBtn = document.getElementById('addCarBtn');
 // Get close button
 var closeBtn = document.getElementsByClassName('close')[0];
 
+// get the commands button
+var confirmCommandsBtn = document.getElementsByClassName('confirmCommandsBtn');
+
 // Listen for open click
 modalBtn.addEventListener('click', openModal);
 // Listen for close click
 closeBtn.addEventListener('click', closeModal);
 // Listen for outside click
 window.addEventListener('click', outsideClick);
+
+// Listen for confirm commands click
+for (var i = 0; i < confirmCommandsBtn.length; i++) {
+    confirmCommandsBtn[i].addEventListener('click', function() {
+        var carId = this.getAttribute('data-car-id');
+        var commandsPopup = document.getElementById('commandsPopup' + carId);
+        commandsPopup.style.display = 'block';
+        var overlay = document.getElementById('overlay');
+        overlay.style.display = 'block';
+    });
+}
+
+// Listen for overlay click
+overlay.addEventListener('click', function() {
+    var commandsPopups = document.getElementsByClassName('command-popup');
+    for (var i = 0; i < commandsPopups.length; i++) {
+        commandsPopups[i].style.display = 'none';
+    }
+    overlay.style.display = 'none';
+});
 
 // Function to open modal
 function openModal() {
