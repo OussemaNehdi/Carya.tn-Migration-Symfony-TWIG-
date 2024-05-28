@@ -158,9 +158,8 @@ class HomeController extends AbstractController
         $car = $entityManager->getRepository(Cars::class)->find($id);
 
         if (!$car) {
-            throw $this->createNotFoundException('The car does not exist');
+            throw $this->createNotFoundException('ERROR : no car found');
         }
-
 
         $entityManager->remove($car);
         $entityManager->flush();
@@ -170,6 +169,40 @@ class HomeController extends AbstractController
 
         return $this->redirectToRoute('my_cars'); 
     }
+
+    #[Route('/myCarsMarkCarUnavailable/{id}', name: 'my_cars_mark_car_unavailable')]
+    public function myCarsMarkCarUnavailable($id, EntityManagerInterface $entityManager): Response
+    {
+        $car = $entityManager->getRepository(Cars::class)->find($id);
+
+        if (!$car) {
+            throw $this->createNotFoundException('Car not found');
+        }
+
+        $car->setAvailable(false);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Car marked as unavailable.');
+
+        return $this->redirectToRoute('my_cars');
+    }
+    #[Route('/myCarsMarkCarAvailable/{id}', name: 'my_cars_mark_car_available')]
+    public function myCarsMarkCarAvailable($id, EntityManagerInterface $entityManager): Response
+    {
+        $car = $entityManager->getRepository(Cars::class)->find($id);
+
+        if (!$car) {
+            throw $this->createNotFoundException('Car not found');
+        }
+
+        $car->setAvailable(true);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Car marked as available.');
+
+        return $this->redirectToRoute('my_cars');
+    }
+
     
 
 
