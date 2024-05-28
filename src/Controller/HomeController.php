@@ -97,6 +97,7 @@ class HomeController extends AbstractController
     public function formRentCar(Request $request , EntityManagerInterface $entityManager,UserPasswordHasherInterface $passwordHasher){
      
         $id=$request->get('id'); 
+        $user = $entityManager->getRepository(Users::class)->findByEmail($this->security->getUser()->getUserIdentifier());
 
 
         $car = $car = $entityManager->getRepository(Cars::class)->find($id);   
@@ -106,17 +107,16 @@ class HomeController extends AbstractController
         
         $startDate = $form->get('start_date')->getData();
         $endDate = $form->get('end_date')->getData();
-        $userId=$this->security->getUser()->getId();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $commandsRepository=$entityManager->getRepository(Commands::class);
-            if ($commandsRepository->isCarRented($userId,$id, $startDate, $endDate)) {
+            if ($commandsRepository->isCarRented($user->getId(),$id, $startDate, $endDate)) {
                 $this->addFlash('error', 'Car is not available for the selected dates.');
                 return $this->redirectToRoute('rent_cars');
             }
             
             
-            if ($passwordHasher->isPasswordValid($this->security->getUser(),$request->request->get('password'))) {
+            if ($passwordHasher->isPasswordValid($user,$request->request->get('password'))) {
                 
                 $command->setCarId($car);
                 $command->setUserId($this->security->getUser());
