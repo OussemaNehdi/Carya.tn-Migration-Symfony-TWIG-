@@ -30,6 +30,9 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use TCPDF;
 use Symfony\Component\HttpFoundation\RedirectResponse; 
 use App\Form\CarType;
+use App\Form\ForgotPasswordType;
+use App\Form\ResetPasswordType;
+
 
 class HomeController extends AbstractController
 {
@@ -121,34 +124,37 @@ class HomeController extends AbstractController
     }
 
     #[Route('/myCars', name: 'my_cars')]
-    public function myCars(CarsRepository $CarsRepository,Request $request , EntityManagerInterface $entityManager): Response
+    public function myCars(CarsRepository $CarsRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        // Check if user is authenticated
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('login');
+        }
+
         $user = $entityManager->getRepository(Users::class)->findOneByEmail($this->getUser()->getUserIdentifier()); //current user?
         if (!$user) {
-            
             throw $this->createNotFoundException('User not found');
         }
-       
-        $filters = $CarsRepository->constructFilterQuery($request);       
+
+        $filters = $CarsRepository->constructFilterQuery($request);
         if (!empty($filters)) {
             $Cars = $CarsRepository->findByFilters($filters);
         } else {
-            $Cars=$CarsRepository->getAllCars();
+            $Cars = $CarsRepository->getAllCars();
         }
 
         $userCars = $CarsRepository->findCarsByUserId($Cars, $user->getId());
-        
+
         return $this->render('home/myCars.html.twig', [
             'bodyclass' => 'listing-body',
             'cars' => $userCars,
-            'brands'=>$CarsRepository-> getDistinctValues('brand'),
-            'models'=>$CarsRepository->getDistinctValues( 'model'),
-            'colors'=>$CarsRepository->getDistinctValues( 'color'),
-            'max_km'=>$CarsRepository->getMaxValue('km'),
-            'max_price'=>$CarsRepository->getMaxValue('price'),
+            'brands' => $CarsRepository->getDistinctValues('brand'),
+            'models' => $CarsRepository->getDistinctValues('model'),
+            'colors' => $CarsRepository->getDistinctValues('color'),
+            'max_km' => $CarsRepository->getMaxValue('km'),
+            'max_price' => $CarsRepository->getMaxValue('price'),
             'filter_data' => $filters,
-            
-                ]);
+        ]);
     }
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
@@ -170,7 +176,7 @@ class HomeController extends AbstractController
             'users' => $users,
             'cars' => $cars,
             'commands' => $commands,
-            'bodyclass' => 'dashboardBody',
+            'bodyclass' => 'admin-dashboard',
             'form' => $form->createView()
         ]);
     }
@@ -204,16 +210,17 @@ class HomeController extends AbstractController
                 $this->security->login($user);
 
                 $rememberMe = $request->request->get('_remember_me');
-                if ($rememberMe) {
-                    // Create a remember-me cookie
-                    $token = $this->container->get('security.token_storage')->getToken();
-                    $this->container->get('security.token_storage')->setToken($token);
+                // This doesnt want to work for some reason, it's too advanced for me to fix it 
+                // if ($rememberMe) {
+                //     // Create a remember-me cookie
+                //     $token = $this->container->get('security.token_storage')->getToken();
+                //     $this->container->get('security.token_storage')->setToken($token);
 
-                    // Send remember-me cookie to the user
-                    $response = new Response();
-                    $rememberMeService = $this->container->get('security.authentication.rememberme.services.persistent.remember_me');
-                    $rememberMeService->loginSuccess($request, $response, $token);
-                }
+                //     // Send remember-me cookie to the user
+                //     $response = new Response();
+                //     $rememberMeService = $this->container->get('security.authentication.rememberme.services.persistent.remember_me');
+                //     $rememberMeService->loginSuccess($request, $response, $token);
+                // }
                 $this->addFlash('success', 'Welcome to Carya, Dear '. $user->getFirstName());
                 return $this->redirectToRoute('my_cars');
             } else {
@@ -231,6 +238,13 @@ class HomeController extends AbstractController
             /** @var Users $user */
             $user = $signupForm->getData();
 
+            // Check if email is already being used
+            $existingUser = $entityManager->getRepository(Users::class)->findOneBy(['email' => $user->getEmail()]);
+            if ($existingUser) {
+            $this->addFlash('error', 'Email is already taken.');
+            return $this->redirectToRoute('login');
+            }
+
             // Set default values
             $user->setRoles(['ROLE_USER']);
             $user->setProfileImage('default.png');
@@ -246,6 +260,7 @@ class HomeController extends AbstractController
             $entityManager->flush();
 
             // Redirect or any other post-signup action
+            $this->addFlash('success', 'Account created successfully. Please login.');
             return $this->redirectToRoute('login');
         }
 
@@ -259,10 +274,85 @@ class HomeController extends AbstractController
     }
     
     #[Route('/forgot-password', name: 'forgot_password')]
-    public function forgotPassword(): Response
+    public function forgotPassword(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
+        $form = $this->createForm(ForgotPasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $email = $data['email'];
+
+            // Check if the email belongs to a user
+            $user = $entityManager->getRepository(Users::class)->findOneBy(['email' => $email]);
+            if ($user) {
+                // Generate a password reset token
+                $token = bin2hex(random_bytes(32));
+                $user->setResetToken($token);
+                $user->setResetTokenExpiration(new \DateTime('+1 hour'));
+                $entityManager->flush();
+
+                // Send password reset email
+                $email = (new Email())
+                    ->subject('Reset your password')
+                    ->from('support@demomailtrap.com')
+                    ->to($user->getEmail())
+                    ->html($this->renderView('emails/resetPassword.html.twig', [
+                        'token' => $token,
+                        'first_name' => $user->getFirstName(),
+                    ]));
+
+                $mailer->send($email);
+
+                $this->addFlash('success', 'Password reset link sent successfully.');
+            } else {
+                $this->addFlash('error', 'Email not found.');
+            }
+
+            return $this->redirectToRoute('login');
+        }
+
         return $this->render('home/forgotPassword.html.twig', [
-            'bodyclass' => 'forgotPasswordBody',
+            'bodyclass' => 'forgot-body',
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/reset-password/{token}', name: 'reset_password')]
+    public function resetPassword(Request $request, string $token, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $user = $entityManager->getRepository(Users::class)->findOneBy(['resetToken' => $token]);
+
+        if (!$user || $user->isResetTokenExpired()) {
+            $this->addFlash('error', 'Invalid or expired password reset token.');
+            return $this->redirectToRoute('login');
+        }
+
+        $form = $this->createForm(ResetPasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $newPassword = $data['password'];
+
+            // Encode the new password and set it on the user entity
+            $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+            $user->setPassword($hashedPassword);
+
+            // Clear the reset token and expiration
+            $user->setResetToken(null);
+            $user->setResetTokenExpiration(null);
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Password has been successfully reset.');
+            return $this->redirectToRoute('login');
+        }
+
+        return $this->render('home/resetPassword.html.twig', [
+            'form' => $form->createView(),
+            'bodyclass' => 'forgot-body',
         ]);
     }
 

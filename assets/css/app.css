@@ -943,3 +943,540 @@ ul{
     transition: border-color 0.2s ease-in-out;
 }
 /* ------------------ End of rent_car.php ------------------*/
+
+/* ------------------ My Cars Page ------------------*/
+.listing-body .main-container {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+.listing-body .filter-menu {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 20%;
+    height: 100vh;
+    overflow-y: auto; /* Enable vertical scrolling */
+
+    padding: 20px 20px 10px 4px;
+    background-color: rgba(0, 0, 0, 0.795);
+    backdrop-filter: blur(5px);
+}
+.listing-body .cars-list {
+    width: 80%;
+    padding: 10px;
+}
+
+
+/* ============================ filter menu.php ======================== */
+.listing-body .filter-menu .container{
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+    padding-right: 0;
+}
+.listing-body .filter-menu .titles{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5px;
+}
+.listing-body .filter-menu h2 {
+    color: #eebf31ea;
+    margin-bottom: 15px;
+    font-size: 30px;
+    font-weight: 600;
+}
+.listing-body .filter-menu .sub-container{
+    margin-bottom: 20px;
+}
+
+.listing-body .filter-menu h3 {
+    color: #ac881c;
+    font-size: 27px;
+    font-weight: 300;
+}
+.listing-body .filter-menu input[type="checkbox"] {
+    /* Hide the default appearance */
+    -webkit-appearance: none;
+    appearance: none;
+    /* custom checkbox appearance */
+    width: 13px; /* Set the width of the checkbox */
+    height: 13px; /* Set the height of the checkbox */
+    border: 2px solid #000; /* Set the border color */
+    background-color: rgb(56, 52, 52); /* Set the background color */
+    border-radius: 3px; /* Add border-radius for rounded corners */
+    outline: none; /* Remove outline */
+    cursor: pointer; /* Add cursor pointer */
+    margin-right: 10px;
+}
+.listing-body .filter-menu label{
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.856);
+}
+.listing-body .filter-menu input[type="checkbox"]:checked {
+    background-color: rgb(255, 215, 215);
+}
+.listing-body .filter-menu span, .listing-body .filter-menu p{
+    color: rgba(255, 255, 255, 0.856);
+    font-size: 15px;
+}
+.listing-body .filter-menu .price-range-slider {
+    width: 60%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 9px;
+    border-radius: 10px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+.listing-body .filter-menu .price-range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #8f7641e0;
+    cursor: w-resize;
+}
+.listing-body .filter-menu .apply-button{
+    background-color: #8f7641e0;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.listing-body .filter-menu .apply-button:hover {
+    background-color: #8f7641;
+}
+/* --------------- end of filter_menu.php ----------------*/
+
+/* ==================== my_cars_listing.php ====================*/
+.listing-body .cars-list .container{
+    width: 100%;
+    background-color: rgba(245, 245, 245, 0.74);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+.listing-body .cars-list .header-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.listing-body .cars-list .header-container h2{
+    margin-top: 7px;
+    margin-bottom: 5px;
+    font-size: 40px;
+    font-weight: 600;
+    width: 500px;
+}
+.listing-body .cars-list .header-container button {
+    position: relative;
+    background-color: rgb(173, 100, 12);
+    color: #fff;
+    padding: 4px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 25px;
+    margin-left: 26%;
+}
+.listing-body .cars-list .header-container button:hover {
+    background-color: rgba(202, 131, 45, 0.907);
+}
+.listing-body .cars-list .car-listing-container{
+    display: flex;
+    flex-wrap: nowrap;
+    background-color: rgba(255, 255, 255, 0.637);
+    backdrop-filter: blur(2px);
+    padding: 10px 14px 10px 14px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    width: 100%;
+    border: 2px solid transparent;
+}
+.listing-body .cars-list .car-listing-container:hover {
+    border: 2px solid #333131;
+    transition: border-color 0.2s ease-in-out;
+}
+.listing-body .cars-list .car-image{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.listing-body .cars-list .car-image img {
+    border-radius: 10px;
+    margin-right: 20px;
+    width: 285px;
+    height: 190px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+}
+.listing-body .cars-list .car-details{
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+}
+.listing-body .cars-list .car-details h2{
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 0
+}
+.listing-body .cars-list .car-details .car-model{
+    font-size: 20px;
+    color: rgb(133, 132, 132);
+    margin-bottom: 30px;
+}
+.listing-body .cars-list .car-details p:not(.car-model) {
+    margin: 2px;
+}
+.listing-body .cars-list .car-details .paragraphs{
+    margin-bottom: 10px;
+}
+.listing-body .cars-list .car-details .mini-title{
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.listing-body .cars-list .action-buttons{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    width: 30%;
+}
+.listing-body .cars-list .action-buttons a{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.listing-body .cars-list .action-buttons button {
+    all: unset;
+
+    padding: 4px 10px 4px 10px;
+    background-color: rgb(179, 133, 48);
+    font-family: 'Poppins', sans-serif;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    width: 80%;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.listing-body .cars-list .action-buttons button:hover{
+    background-color: rgb(206, 158, 70);
+    border: 2px solid rgb(158, 112, 26);
+    transition: border-color 0.2s ease-in-out;
+}
+/* ------------------ End of my_cars_listing.php ------------------*/
+
+/* ------------------ Admin Dashboard Page ------------------*/
+.user-info,
+.car-image,
+.car-info {
+    cursor: pointer;
+}
+
+.car-image-displayed {
+    width: 250px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.user-info:hover,
+.car-image:hover,
+.car-info:hover {
+    text-decoration: underline;
+}
+
+.admin-dashboard h1 {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #333; /* Dark gray color */
+}
+
+.admin-dashboard h2 {
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+}
+
+.admin-dashboard section {
+    margin: 20px auto;
+    background-color: #ffffffce;
+    
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    max-width: 1100px;
+}
+
+.admin-dashboard table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-dashboard th, .admin-dashboard td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.admin-dashboard th {
+    background-color: #dd823ce4;
+    color: #fff;
+    backdrop-filter: blur(10px);
+}
+
+.admin-dashboard td {
+    color: #555;
+}
+
+.admin-dashboard tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.admin-dashboard th:first-child, .admin-dashboard td:first-child {
+    padding-left: 20px;
+}
+
+.admin-dashboard th:last-child, .admin-dashboard td:last-child {
+    padding-right: 20px;
+}
+
+/* Styling for buttons */
+.admin-dashboard button {
+    background-color: rgb(173, 100, 12);
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.admin-dashboard th button {
+    width: 100%;
+}
+
+.admin-dashboard button:hover {
+    background-color: rgba(202, 131, 45, 0.907);
+}
+
+.admin-dashboard td .ban-link{
+    color: rgb(201, 28, 28);
+    position: relative;
+    text-decoration: none;
+}
+
+.admin-dashboard td .ban-link::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: rgb(201, 28, 28);
+    transition: width 0.3s ease-in-out;
+}
+
+.admin-dashboard td .ban-link:hover::after {
+    width: 100%;
+}
+
+.admin-dashboard td .unban-link{
+    color: rgb(55, 94, 195);
+    position: relative;
+    text-decoration: none;
+}
+
+.admin-dashboard td .unban-link::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: rgb(55, 94, 195);
+    transition: width 0.3s ease-in-out;
+}
+
+.admin-dashboard td .unban-link:hover::after {
+    width: 100%;
+}
+/* Styling for popup */
+.admin-dashboard .popup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    max-width: 400px;
+}
+
+.admin-dashboard .popup-content {
+    text-align: center;
+}
+
+.admin-dashboard .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #888;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.admin-dashboard .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+.info-popup {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: none;
+}
+
+/* bch ki ticklicki el bara yetsaker el popup taa add wala update car */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* ------------------ End of admin_dashboard ------------------*/
+
+/* ------------------ forgot password Page ------------------*/
+.forgot-body .container{
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 13rem auto;
+}
+.forgot-body .card {
+    border-radius: 30px;
+    background-color: rgba(255, 220, 220, 0.406);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 40px;
+}
+.forgot-body .lock-icon {
+    font-size: 3rem;
+    margin-bottom: 30px;
+}
+/* Keyframes for the lock icon animation */
+@keyframes lockAnimation {
+    0% { transform: rotate(0deg); }
+    20% { transform: rotate(20deg); }
+    60% { transform: rotate(-20deg); }
+    100% { transform: rotate(0deg); }
+}
+
+/* Style for the lock icon */
+.lock-icon{
+    transition: transform 0.3s ease;
+}
+
+/* Animation trigger when hovering over the card */
+.card:hover .lock-icon{
+    animation: lockAnimation 0.5s ease;
+}
+
+.forgot-body h2 {
+    font-size: 1.5rem;
+    margin-top: 10px;
+    text-transform: uppercase;
+}
+.forgot-body p {
+    font-size: 12px;
+}
+.forgot-body .container .input-field{
+    width: 100%;
+    margin: 12px 0;
+    position: relative;
+}
+.forgot-body .container .input-box{
+    width: 100%;
+    height: 50px;
+    font-size: 15px;
+    color: #040404;
+    border: none;
+    border-radius: 10px;
+    padding: 7px 45px 0 20px;
+    background: rgba(224, 223, 223, 0.6);
+    backdrop-filter: blur(2px);
+    outline: none;
+}
+.forgot-body .container .input-field label{
+    color: black;
+    position: relative;
+    left: 20px;
+    top: -36px;
+    font-size: 15px;
+    transition: .3s ease-in-out;
+}
+
+.forgot-body .container .input-box:focus ~ label,.forgot-body .input-box:not(:placeholder-shown) ~ label{
+    top: -50px;
+    font-size: 10px;
+    color: #c12828;
+    font-weight: 500;
+}
+.forgot-body button {
+    all: unset;
+
+    text-align: center;
+    width: 80%;
+    color: #fce1c7;
+    background-color: rgb(207, 129, 34);
+    padding: 7px 17px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+.forgot-body button:hover {
+    background-color: rgb(235, 156, 59);
+    border: 2px solid rgb(207, 129, 34);
+    color:white;
+}
+/* ------------------ End of forgot_password.php ------------------*/
