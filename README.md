@@ -1,5 +1,6 @@
 # Migrating Carya.tn Website to Symfony Framework
-[Pictures to be added here]
+![image](https://github.com/OussemaNehdi/Carya.tn-Migration-Symfony-TWIG-/assets/157837589/46f6d759-27bb-46ef-b945-1c97a31226fc)
+
 
 This repository contains the migration of the existing website Carya.tn to Symfony framework, utilizing TWIG for templating and following the MVC (Model-View-Controller) architecture.
 
